@@ -67,12 +67,12 @@ namespace TextRPG
             Console.WriteLine("■ 상태보기 ■");
             Console.WriteLine("캐릭터의 정보가 표기됩니다.");
             Console.WriteLine("");
-            Console.WriteLine("Lv. 01");
-            Console.WriteLine("Chad ( 전사 )");
-            Console.WriteLine("공격력 : 10");
-            Console.WriteLine("방어력 : 5");
-            Console.WriteLine("체 력 : 100");
-            Console.WriteLine("Gold : 1500 G");
+            Console.WriteLine("Lv. {0}",player.Level);
+            Console.WriteLine("Chad : {0}",player.Chad);
+            Console.WriteLine("공격력 : {0}",player.AtkPlayer);
+            Console.WriteLine("방어력 : {0}",player.DfdPlayer);
+            Console.WriteLine("체 력 : {0}",player.Hp);
+            Console.WriteLine("Gold : {0} G",player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("");
@@ -94,13 +94,20 @@ namespace TextRPG
 
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("Lv.2 미니언  HP 15");
-            Console.WriteLine("Lv.5 대포미니언 HP 25");
-            Console.WriteLine("LV.3 공허충 HP 10");
+            //Console.WriteLine("Lv.2 미니언  HP 15");
+            //Console.WriteLine("Lv.5 대포미니언 HP 25");
+            //Console.WriteLine("LV.3 공허충 HP 10");
+            for (int i = 0; i < monsterlist.Count; i++)
+            {
+                monsterlist[i].PrintMonsterDescription(false, i + 1);
+            }
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
-            Console.WriteLine("Lv.1  Chad (전사) ");
-            Console.WriteLine("HP 100/100");
+            //Console.WriteLine("Lv.1  Chad (전사) ");
+            //Console.WriteLine("HP 100/100");
+            Console.Write($"Lv.{player.Level} ");
+            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}"); 
             Console.WriteLine("");
             Console.WriteLine("1. 공격");
             Console.WriteLine("0. 도망가기");
