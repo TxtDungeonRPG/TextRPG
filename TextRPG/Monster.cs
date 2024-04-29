@@ -38,7 +38,6 @@ internal class Monster
             Console.WriteLine($" HP {Hp}");
         }
 
-
     }
 
 

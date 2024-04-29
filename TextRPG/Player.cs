@@ -7,6 +7,7 @@ public class Player
     public float AtkPlayer;
     public float DfdPlayer;
     public int Hp;
+	public int MaxHp;
     public int Gold;
 
 	public Player(int level, string chad, float atkPlayer,float dfdPlayer, int hp, int gold)
@@ -16,6 +17,9 @@ public class Player
 		AtkPlayer = atkPlayer;
 		DfdPlayer = dfdPlayer;
 		Hp = hp;
+		MaxHp = hp;
 		Gold = gold;
 	}
+
+
 }
