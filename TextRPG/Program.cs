@@ -94,13 +94,20 @@ namespace TextRPG
 
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("Lv.2 미니언  HP 15");
-            Console.WriteLine("Lv.5 대포미니언 HP 25");
-            Console.WriteLine("LV.3 공허충 HP 10");
+            //Console.WriteLine("Lv.2 미니언  HP 15");
+            //Console.WriteLine("Lv.5 대포미니언 HP 25");
+            //Console.WriteLine("LV.3 공허충 HP 10");
+            for (int i = 0; i < monsterlist.Count; i++)
+            {
+                monsterlist[i].PrintMonsterDescription(false, i + 1);
+            }
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
-            Console.WriteLine("Lv.1  Chad (전사) ");
-            Console.WriteLine("HP 100/100");
+            //Console.WriteLine("Lv.1  Chad (전사) ");
+            //Console.WriteLine("HP 100/100");
+            Console.Write($"Lv.{player.Level} ");
+            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}"); 
             Console.WriteLine("");
             Console.WriteLine("1. 공격");
             Console.WriteLine("0. 도망가기");
