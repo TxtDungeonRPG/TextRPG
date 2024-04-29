@@ -140,8 +140,9 @@ namespace TextRPG
             }        
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
-            Console.WriteLine("Lv.1  Chad (전사) ");
-            Console.WriteLine("HP 100/100");
+            Console.Write($"Lv.{player.Level} ");
+            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
             Console.WriteLine("");
             Console.WriteLine("0. 취소");
             Console.WriteLine("");
@@ -153,7 +154,7 @@ namespace TextRPG
                 case 1:
                 case 2:
                 case 3:
-                    Attack();
+                    Attack(choice);
                     break;
                 case 0:
                     StartBattleMenu();
@@ -162,7 +163,7 @@ namespace TextRPG
             AttackMenu();
         }
 
-        private void Attack()
+        private void Attack(int choiceEnemy)
         {
             Console.Clear();
 
