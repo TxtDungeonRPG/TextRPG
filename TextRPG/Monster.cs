@@ -3,11 +3,11 @@
 
 internal class Monster
 {
-    public string Name { get; } //이름
-    public float Hp { get; } //체력
-    public float Level { get; } //레벨
-    public float Attack { get; } //공격력
-    public bool IsDead { get; private set; } //몬스터 사망여부
+    public string Name; //이름
+    public float Hp; //체력
+    public float Level; //레벨
+    public float Attack; //공격력
+    public bool IsDead; //몬스터 사망여부
 
     public Monster(string name, float hp, float level, float attack, bool isDead = false)
     {
