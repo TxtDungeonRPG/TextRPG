@@ -5,7 +5,7 @@ namespace TextRPG
 {
     public class GameManager
     {
-        // private Player player;
+        private Player player;
         // private Monster monster;
 
         public GameManager()
@@ -15,7 +15,8 @@ namespace TextRPG
 
         private void InitializeGame()
         {
-
+            player = new Player();
+            player.SetPlayer(1,"직업",2.0f,11.0f,10,12);
 
         }
 
@@ -59,12 +60,12 @@ namespace TextRPG
             Console.WriteLine("■ 상태보기 ■");
             Console.WriteLine("캐릭터의 정보가 표기됩니다.");
             Console.WriteLine("");
-            Console.WriteLine("Lv. 01");
-            Console.WriteLine("Chad ( 전사 )");
-            Console.WriteLine("공격력 : 10");
-            Console.WriteLine("방어력 : 5");
-            Console.WriteLine("체 력 : 100");
-            Console.WriteLine("Gold : 1500 G");
+            Console.WriteLine("Lv. {0}",player.Level);
+            Console.WriteLine("Chad : {0}",player.Chad);
+            Console.WriteLine("공격력 : {0}",player.AtkPlayer);
+            Console.WriteLine("방어력 : {0}",player.DfdPlayer);
+            Console.WriteLine("체 력 : {0}",player.Hp);
+            Console.WriteLine("Gold : {0} G",player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("");
