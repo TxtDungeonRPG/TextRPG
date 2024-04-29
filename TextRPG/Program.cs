@@ -127,9 +127,10 @@ namespace TextRPG
 
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("1 Lv.2 미니언  HP 15");
-            Console.WriteLine("2 Lv.5 대포미니언 HP 25");
-            Console.WriteLine("3 LV.3 공허충 Dead");
+            for(int i = 0; i < monsterlist.Count; i++) 
+            {
+                monsterlist[i].PrintMonsterDescription(true, i + 1);
+            }        
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
             Console.WriteLine("Lv.1  Chad (전사) ");
