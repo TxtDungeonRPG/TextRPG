@@ -6,7 +6,7 @@ namespace TextRPG
     public class GameManager
     {
         private Player player;
-        // private Monster monster;
+        private List<Monster> monsterlist;
 
         public GameManager()
         {
@@ -15,8 +15,16 @@ namespace TextRPG
 
         private void InitializeGame()
         {
-            player = new Player();
-            player.SetPlayer(1,"직업",2.0f,11.0f,10,12);
+            //플레이어 초기값
+            player = new Player(1, "전사", 10, 5, 100, 1500);
+
+
+            //몬스터 리스트 초기값
+            monsterlist = new List<Monster>();
+            monsterlist.Add(new Monster(2, "미니언", 15, 5));
+            monsterlist.Add(new Monster(5, "대포미니언", 25, 8));
+            monsterlist.Add(new Monster(3, "공허충", 10, 9));
+
 
         }
 
@@ -37,7 +45,6 @@ namespace TextRPG
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 전투시작");
             Console.WriteLine("");
-
             int choice = ConsoleUtil.MenuChoice(1, 2, "원하시는 행동을 입력해주세요.");
 
             switch (choice)

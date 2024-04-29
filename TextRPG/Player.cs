@@ -3,19 +3,19 @@
 public class Player
 {
 	public int Level;
-	public string Chad;
-	public float AtkPlayer;
-	public float DfdPlayer;
-	public int Hp;
-	public int Gold;
+    public string Chad;
+    public float AtkPlayer;
+    public float DfdPlayer;
+    public int Hp;
+    public int Gold;
 
-	public void SetPlayer(int _level, string _chad, float _atkPlayer,float _dfdPlayer, int _hp, int _gold)
+	public Player(int level, string chad, float atkPlayer,float dfdPlayer, int hp, int gold)
 	{
-		Level = _level;
-		Chad = _chad;
-		AtkPlayer = _atkPlayer;
-		DfdPlayer = _dfdPlayer;
-		Hp = _hp;
-		Gold = _gold;
+		Level = level;
+		Chad = chad;
+		AtkPlayer = atkPlayer;
+		DfdPlayer = dfdPlayer;
+		Hp = hp;
+		Gold = gold;
 	}
 }
