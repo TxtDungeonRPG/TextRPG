@@ -9,7 +9,7 @@ internal class Monster
     public float Attack; //공격력
     public bool IsDead; //몬스터 사망여부
 
-    public Monster(string name, float hp, float level, float attack, bool isDead = false)
+    public Monster(float level, string name, float hp,  float attack, bool isDead = false)
     {
         Name = name;
         Hp = hp;
@@ -25,18 +25,17 @@ internal class Monster
     {
         if (withNumber)
         {
-            Console.Write("{0} ", idx);
+            Console.Write($"{idx} ");
         }
-        Console.Write(" | ");
         Console.Write($"Lv.{Level} ");
         Console.Write(Name);
         if (IsDead)
         {
-            Console.WriteLine("Dead");
+            Console.WriteLine(" Dead");
         }
         else
         {
-            Console.WriteLine($"HP {Hp}");
+            Console.WriteLine($" HP {Hp}");
         }
 
 
