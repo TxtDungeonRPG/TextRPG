@@ -1,31 +1,271 @@
-﻿namespace TextRPG
+﻿using System;
+using System.Numerics;
+
+namespace TextRPG
 {
     public class GameManager
     {
-        public GameManager() 
+        // private Player player;
+        // private Monster monster;
+
+        public GameManager()
         {
             InitializeGame();
         }
 
         private void InitializeGame()
         {
-  
+
 
         }
 
         public void StartGame()
         {
+            Console.Clear();
+            MainMenu();
+        }
+
+        private void MainMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("이제 전투를 시작할 수 있습니다.");
+            Console.WriteLine("");
+
+            Console.WriteLine("1. 상태보기");
+            Console.WriteLine("2. 전투시작");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(1, 2, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 1:
+                    StatusMenu();
+                    break;
+                case 2:
+                    StartBattleMenu();
+                    break;
+
+            }
+            MainMenu();
+        }
+
+        private void StatusMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 상태보기 ■");
+            Console.WriteLine("캐릭터의 정보가 표기됩니다.");
+            Console.WriteLine("");
+            Console.WriteLine("Lv. 01");
+            Console.WriteLine("Chad ( 전사 )");
+            Console.WriteLine("공격력 : 10");
+            Console.WriteLine("방어력 : 5");
+            Console.WriteLine("체 력 : 100");
+            Console.WriteLine("Gold : 1500 G");
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 0, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+            }
+            StatusMenu();
+        }
+
+        private void StartBattleMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.2 미니언  HP 15");
+            Console.WriteLine("Lv.5 대포미니언 HP 25");
+            Console.WriteLine("LV.3 공허충 HP 10");
+            Console.WriteLine("");
+            Console.WriteLine("[내정보]");
+            Console.WriteLine("Lv.1  Chad (전사) ");
+            Console.WriteLine("HP 100/100");
+            Console.WriteLine("");
+            Console.WriteLine("1. 공격");
+            Console.WriteLine("0. 도망가기");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 1:
+                    AttackMenu();
+                    break;
+                case 0:
+                    MainMenu();
+                    break;
+            }
+            StartBattleMenu();
 
         }
+
+        private void AttackMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            Console.WriteLine("1 Lv.2 미니언  HP 15");
+            Console.WriteLine("2 Lv.5 대포미니언 HP 25");
+            Console.WriteLine("3 LV.3 공허충 Dead");
+            Console.WriteLine("");
+            Console.WriteLine("[내정보]");
+            Console.WriteLine("Lv.1  Chad (전사) ");
+            Console.WriteLine("HP 100/100");
+            Console.WriteLine("");
+            Console.WriteLine("0. 취소");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 3, "대상을 선택해주세요.");
+
+            switch (choice)
+            {
+                case 1:
+                case 2:
+                case 3:
+                    Attack();
+                    break;
+                case 0:
+                    StartBattleMenu();
+                    break;
+            }
+            AttackMenu();
+        }
+
+        private void Attack()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            Console.WriteLine("Chad 의 공격!");
+            Console.WriteLine("Lv.3 공허충 을(를) 맞췄습니다. [데미지 : 10]");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.3 공허충");
+            Console.WriteLine("HP 10 -> Dead");
+            Console.WriteLine("HP 100/100");
+            Console.WriteLine("");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 0);
+
+            switch (choice)
+            {
+                case 0:
+                    EnemyPhase();
+                    break;
+            }
+        }
+
+        private void EnemyPhase()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.2 미니언 의 공격!");
+            Console.WriteLine("Chad 을(를) 맞췄습니다.  [데미지 : 6]");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.1 Chad");
+            Console.WriteLine("HP 100 -> 94");
+            Console.WriteLine("");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 0);
+
+            switch (choice)
+            {
+                case 0:
+                    AttackMenu();
+                    break;
+            }
+        }
+
+        private void ResultBattle()
+        {
+            // 모든 몬스터가 Dead 상태가 된다면 게임이 종료됩니다. → Victory
+            Victory();
+            // 내 체력이 0이 되면 게임이 종료됩니다. → Lose
+            Lose();
+        }
+
+        private void Victory()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! - Result ■");
+            Console.WriteLine("");
+            Console.WriteLine("Victory");
+            Console.WriteLine("");
+            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.1 Chad");
+            Console.WriteLine("HP 100 -> 74");
+            Console.WriteLine("");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 0);
+
+            switch (choice)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+            }
+            Victory();
+        }
+
+        private void Lose()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! - Result ■");
+            Console.WriteLine("");
+            Console.WriteLine("You Lose");
+            Console.WriteLine("");
+            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("Lv.1 Chad");
+            Console.WriteLine("HP 100 -> 0");
+            Console.WriteLine("");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 0);
+
+            switch (choice)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+            }
+            Lose();
+        }
+
+
     }
-    
-    internal class Program
+
+
+    class Program
     {
         static void Main(string[] args)
         {
             GameManager gameManager = new GameManager();
             gameManager.StartGame();
-            Console.WriteLine("hi");
         }
     }
 }
