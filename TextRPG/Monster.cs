@@ -24,6 +24,11 @@ internal class Monster
     //사망한 몬스터는 [체력] 대신 Dead 표시
     internal void PrintMonsterDescription(bool withNumber = false, int idx = 0)
     {
+        if (IsDead)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+        }
         if (withNumber)
         {
             Console.Write($"{idx} ");
@@ -38,7 +43,7 @@ internal class Monster
         {
             Console.WriteLine($" HP {Hp}");
         }
-
+        Console.ResetColor();
     }
 
 
