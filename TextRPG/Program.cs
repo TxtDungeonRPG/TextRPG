@@ -233,7 +233,7 @@ namespace TextRPG
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int choice = ConsoleUtil.MenuChoice(0, 0);
-
+            
             switch (choice)
             {
                 case 0:
@@ -244,10 +244,23 @@ namespace TextRPG
 
         private void ResultBattle()
         {
+            bool allDead = true; // 몬스터가 모두 죽었는지 판단
+            
+            // 몬스터가 한 마리라도 살아있으면, false
+            for(int i=0; i<monsterlist.Count; i++)
+            {
+                if (!monsterlist[i].IsDead) allDead = false;
+            }
             // 모든 몬스터가 Dead 상태가 된다면 게임이 종료됩니다. → Victory
-            Victory();
+            if (allDead)
+            {
+                Victory();
+            }
             // 내 체력이 0이 되면 게임이 종료됩니다. → Lose
-            Lose();
+            if(player.Hp <= 0)
+            {
+                Lose();
+            }                
         }
 
         private void Victory()
