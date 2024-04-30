@@ -8,7 +8,7 @@ namespace TextRPG
     {
         private Player player;
         private List<Monster> monsterlist;
-        private bool isMonsterSponed = false;
+        private bool isMonsterSpawned = false;
 
         public GameManager()
         {
@@ -92,7 +92,7 @@ namespace TextRPG
 
         private void StartBattleMenu()
         {
-            if (!isMonsterSponed)
+            if (!isMonsterSpawned)
             {
                 //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
                 Random random = new Random();
@@ -114,7 +114,7 @@ namespace TextRPG
                             break;
                     }
                 }
-                isMonsterSponed = true;
+                isMonsterSpawned = true;
             }
             
             Console.Clear();
@@ -149,7 +149,7 @@ namespace TextRPG
                     break;
                 case 0:
                     monsterlist.Clear();
-                    isMonsterSponed = false;
+                    isMonsterSpawned = false;
                     MainMenu();
                     break;
             }
