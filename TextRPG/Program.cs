@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Xml.Serialization;
 
@@ -8,6 +9,7 @@ namespace TextRPG
     {
         private Player player;
         private List<Monster> monsterlist;
+        private bool isMonsterSpawned = false;
 
         public GameManager()
         {
@@ -22,10 +24,9 @@ namespace TextRPG
 
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
-            monsterlist.Add(new Monster(2, "미니언", 15, 5));
-            monsterlist.Add(new Monster(5, "대포미니언", 25, 8));
-            monsterlist.Add(new Monster(3, "공허충", 10, 9));
-
+            //monsterlist.Add(new Monster(2, "미니언", 15, 5));
+            //monsterlist.Add(new Monster(5, "대포미니언", 25, 8));
+            //monsterlist.Add(new Monster(3, "공허충", 10, 9));
 
         }
 
@@ -63,6 +64,7 @@ namespace TextRPG
 
         private void StatusMenu()
         {
+            
             Console.Clear();
 
             Console.WriteLine("■ 상태보기 ■");
@@ -91,6 +93,31 @@ namespace TextRPG
 
         private void StartBattleMenu()
         {
+            if (!isMonsterSpawned)
+            {
+                //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
+                Random random = new Random();
+                int count = random.Next(1, 5); // 몬스터 마리수
+                int cnt; // 몬스터 종류
+                for (int i = 0; i < count; i++)
+                {
+                    cnt = random.Next(1, 4);
+                    switch (cnt)
+                    {
+                        case 1:
+                            monsterlist.Add(new Monster(2, "미니언", 15, 5));
+                            break;
+                        case 2:
+                            monsterlist.Add(new Monster(5, "대포미니언", 25, 8));
+                            break;
+                        case 3:
+                            monsterlist.Add(new Monster(3, "공허충", 10, 9));
+                            break;
+                    }
+                }
+                isMonsterSpawned = true;
+            }
+            
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
@@ -122,6 +149,8 @@ namespace TextRPG
                     AttackMenu();
                     break;
                 case 0:
+                    monsterlist.Clear();
+                    isMonsterSpawned = false;
                     MainMenu();
                     break;
             }
