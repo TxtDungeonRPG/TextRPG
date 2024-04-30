@@ -215,10 +215,25 @@ namespace TextRPG
 
         private void ResultBattle()
         {
+        
+            bool allDead = true; // 몬스터가 모두 죽었는지 판단
+            
+            // 몬스터가 한 마리라도 살아있으면, false
+            for(int i=0; i<monsterlist.Count; i++)
+            {
+                if (!monsterlist[i].IsDead) allDead = false;
+            }
             // 모든 몬스터가 Dead 상태가 된다면 게임이 종료됩니다. → Victory
-            Victory();
+            if (allDead)
+            {
+                Victory();
+            }
             // 내 체력이 0이 되면 게임이 종료됩니다. → Lose
-            Lose();
+            if(player.Hp <= 0)
+            {
+                Lose();
+            }                
+        
         }
 
         private void Victory()
@@ -247,37 +262,35 @@ namespace TextRPG
             Victory();
         }
 
-        private void Lose()
-        {
-            Console.Clear();
+       
+private void Lose()
+{
+    Console.Clear();
 
-            Console.WriteLine("■ Battle!! - Result ■");
-            Console.WriteLine("");
-            Console.WriteLine("You Lose");
-            Console.WriteLine("");
-            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
-            Console.WriteLine("");
-            Console.WriteLine("Lv.1 Chad");
-            Console.WriteLine("HP 100 -> 0");
-            Console.WriteLine("");
-            Console.WriteLine("0. 다음");
-            Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(0, 0);
+    Console.WriteLine("■ Battle!! - Result ■");
+    Console.WriteLine("");
+    Console.WriteLine("You Lose");
+    Console.WriteLine("");
+    Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
+    Console.WriteLine("");
+    Console.WriteLine("Lv.1 Chad");
+    Console.WriteLine("HP {0} -> {1}");
+    Console.WriteLine("");
+    Console.WriteLine("0. 다음");
+    Console.WriteLine("");
+    int choice = ConsoleUtil.MenuChoice(0, 0);
 
-            switch (choice)
-            {
-                case 0:
-                    MainMenu();
-                    break;
-            }
-            Lose();
-        }
-
-
+    switch (choice)
+    {
+        case 0:
+            MainMenu();
+            break;
     }
+}
 
 
     class Program
+   
     {
         static void Main(string[] args)
         {
