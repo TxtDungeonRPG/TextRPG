@@ -129,7 +129,7 @@ namespace TextRPG
                 int cnt; // 몬스터 종류
                 for (int i = 0; i < count; i++)
                 {
-                    cnt = random.Next(1, 4);
+                    cnt = random.Next(1, 6);
                     switch (cnt)
                     {
                         case 1:
@@ -140,6 +140,12 @@ namespace TextRPG
                             break;
                         case 3:
                             monsterlist.Add(new Monster(3, "공허충", 10, 9));
+                            break;
+                        case 4:
+                            monsterlist.Add(new Monster(1, "칼날부리", 8, 7));
+                            break;
+                        case 5:
+                            monsterlist.Add(new Monster(5, "블루", 30, 10));
                             break;
                     }
                 }
