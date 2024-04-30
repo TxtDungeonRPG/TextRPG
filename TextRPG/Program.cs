@@ -12,6 +12,7 @@ namespace TextRPG
         private List<Monster> monsterlist;
         private bool isMonsterSpawned = false;
         private int startHp;
+        private List<Item> inventory;
 
         public GameManager()
         {
@@ -23,6 +24,7 @@ namespace TextRPG
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
+            inventory = new List<Item>();
         }
 
         private void PlayerCreate()
@@ -74,6 +76,7 @@ namespace TextRPG
 
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 전투시작");
+            Console.WriteLine("3. 인벤토리");
             Console.WriteLine("4. 퀘스트");
             Console.WriteLine("");
             int choice = ConsoleUtil.MenuChoice(1, 4, "원하시는 행동을 입력해주세요.");
@@ -86,12 +89,20 @@ namespace TextRPG
                 case 2:
                     StartBattleMenu();
                     break;
+                case 3:
+                    InventoryMenu();
+                    break;
                 case 4:
                     StartQuestMenu();
                     break;
 
             }
             MainMenu();
+        }
+
+        private void InventoryMenu()
+        {
+            throw new NotImplementedException();
         }
 
         private void StatusMenu()
