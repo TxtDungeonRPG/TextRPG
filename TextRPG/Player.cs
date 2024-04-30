@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 public class Player
 {
@@ -9,9 +10,11 @@ public class Player
     public float DfdPlayer;
     public int Hp;
 	public int MaxHp;
+    public int Mp;
+    public int MaxMp;
     public int Gold;
 
-	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int gold)
+	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int mp, int gold)
 	{
 		Level = level;
 		Name = name;
@@ -20,8 +23,19 @@ public class Player
 		DfdPlayer = dfdPlayer;
 		Hp = hp;
 		MaxHp = hp;
+		Mp = mp;
+		MaxMp = mp;
 		Gold = gold;
 	}
+
+	public void PlayerInfo()
+	{
+        Console.WriteLine("[내정보]");
+        Console.Write($"Lv.{Level} ");
+        Console.WriteLine($"{Name} ({Class})");
+        Console.WriteLine($"HP {Hp}/{MaxHp}");
+        Console.WriteLine($"MP {Mp}/{MaxMp}");
+    }
 
 
 }

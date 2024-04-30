@@ -44,16 +44,16 @@ namespace TextRPG
             switch (choice)
             {
                 case 1:
-                    player = new Player(1, playerName, "전사", 8, 7, 100, 1500);
+                    player = new Player(1, playerName, "전사", 8, 7, 100, 30, 1500);
                     break;
                 case 2:
-                    player = new Player(1, playerName, "마법사", 12, 3, 100, 1500);
+                    player = new Player(1, playerName, "마법사", 12, 3, 100, 80, 1500);
                     break;
                 case 3:
-                    player = new Player(1, playerName, "도적", 11, 4, 100, 2000);
+                    player = new Player(1, playerName, "도적", 11, 4, 100, 50, 2000);
                     break;
                 case 4:
-                    player = new Player(1, playerName, "해적", 10, 5, 100, 1700);
+                    player = new Player(1, playerName, "해적", 10, 5, 100, 50, 1700);
                     break;
             }
         }
@@ -155,21 +155,22 @@ namespace TextRPG
                 monsterlist[i].PrintMonsterDescription(false, i + 1);
             }
             Console.WriteLine("");
-            Console.WriteLine("[내정보]");
-            Console.Write($"Lv.{player.Level} ");
-            Console.WriteLine($"{player.Name} ({player.Class})");
-            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}"); 
+            player.PlayerInfo();
             Console.WriteLine("");
             Console.WriteLine("1. 공격");
+            Console.WriteLine("2. 스킬");
             Console.WriteLine("0. 도망가기");
             Console.WriteLine("");
 
-            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(0, 2, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
                 case 1:
                     AttackMenu();
+                    break;
+                case 2:
+                    SkillMenu();
                     break;
                 case 0:
                     monsterlist.Clear();
@@ -193,10 +194,7 @@ namespace TextRPG
                 monsterlist[i].PrintMonsterDescription(true, i + 1);
             }        
             Console.WriteLine("");
-            Console.WriteLine("[내정보]");
-            Console.Write($"Lv.{player.Level} ");
-            Console.WriteLine($"{player.Name} ({player.Class})");
-            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
+            player.PlayerInfo();
             Console.WriteLine("");
             Console.WriteLine("0. 취소");
             Console.WriteLine("");
@@ -265,6 +263,48 @@ namespace TextRPG
                     break;
             }
         }
+
+        private void SkillMenu()
+        {
+            int choice;
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            for (int i = 0; i < monsterlist.Count; i++)
+            {
+                monsterlist[i].PrintMonsterDescription(false, i + 1);
+            }
+            Console.WriteLine("");
+            player.PlayerInfo();
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            Console.WriteLine("0. 취소");
+            Console.WriteLine("1. 알파 스트라이크 - MP 10\n공격력 * 2 로 하나의 적을 공격합니다.");
+            Console.WriteLine("2. 더블 스트라이크 - MP 15\n공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
+            do
+            {
+                choice = ConsoleUtil.MenuChoice(0, monsterlist.Count, "대상을 선택해주세요.");
+                if (choice != 0 && monsterlist[choice - 1].IsDead)
+                {
+                    Console.WriteLine("이미 죽은 몬스터입니다");
+                }
+            }
+            while (choice != 0 && monsterlist[choice - 1].IsDead);
+
+            if (choice == 0)
+            {
+                StartBattleMenu();
+
+            }
+            else
+            {
+                Attack(choice);
+            }
+
+        }
+
 
         private void EnemyPhase()
         {
