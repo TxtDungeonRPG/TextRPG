@@ -12,6 +12,7 @@ namespace TextRPG
         private List<Monster> monsterlist;
         private bool isMonsterSpawned = false;
         private int startHp;
+        private List<Item> inventory;
 
         public GameManager()
         {
@@ -23,6 +24,7 @@ namespace TextRPG
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
+            inventory = new List<Item>();
         }
 
         private void PlayerCreate()
