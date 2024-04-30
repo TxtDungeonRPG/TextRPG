@@ -295,7 +295,7 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("Victory");
             Console.WriteLine("");
-            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
+            Console.WriteLine($"던전에서 몬스터 {monsterlist.Count}마리를 잡았습니다.");
             Console.WriteLine("");
             Console.WriteLine("Lv.1 Chad");
             Console.WriteLine("HP 100 -> 74");
