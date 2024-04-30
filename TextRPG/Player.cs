@@ -27,7 +27,7 @@ public class Player
 
 	public bool LevelUpcheck()
 	{
-        int[] needExp = { 1, 2, 65, 100 };
+        int[] needExp = { 10, 35, 65, 100 };
 
         if ((Level<= 4) && Exp >= needExp[Level-1])
 		{
