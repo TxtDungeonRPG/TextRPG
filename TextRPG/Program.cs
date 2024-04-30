@@ -18,9 +18,9 @@ namespace TextRPG
 
         private void InitializeGame()
         {
+            string playerName = "default name";
             //플레이어 초기값
             player = new Player(1, "전사", 10, 5, 100, 1500);
-
 
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
@@ -28,6 +28,32 @@ namespace TextRPG
             //monsterlist.Add(new Monster(5, "대포미니언", 25, 8));
             //monsterlist.Add(new Monster(3, "공허충", 10, 9));
 
+
+            Console.Clear();
+            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("원하시는 이름을 설정해주세요");
+            playerName = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("■ 직업 선택 ■");
+            Console.WriteLine("1. 전사\n2. 마법사\n3. 도적\n4. 해적");
+
+            int choice = ConsoleUtil.MenuChoice(0, 4, "원하시는 직업을 입력해주세요.");
+            switch (choice)
+            {
+                case 1:
+                    player = new Player(1, "전사", 8, 7, 100, 1500);
+                    break;
+                case 2:
+                    player = new Player(1, "마법사", 12, 3, 100, 1500);
+                    break;
+                case 3:
+                    player = new Player(1, "도적", 11, 4, 100, 2000);
+                    break;
+                case 4:
+                    player = new Player(1, "해적", 10, 5, 100, 1700);
+                    break;
+
+            }
         }
 
         public void StartGame()
