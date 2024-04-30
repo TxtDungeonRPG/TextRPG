@@ -76,8 +76,9 @@ namespace TextRPG
 
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 전투시작");
+            Console.WriteLine("3. 인벤토리");
             Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(1, 2, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(1, 4, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
@@ -87,9 +88,17 @@ namespace TextRPG
                 case 2:
                     StartBattleMenu();
                     break;
+                case 3:
+                    InventoryMenu();
+                    break;
 
             }
             MainMenu();
+        }
+
+        private void InventoryMenu()
+        {
+            throw new NotImplementedException();
         }
 
         private void StatusMenu()
