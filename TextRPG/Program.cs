@@ -16,7 +16,7 @@ namespace TextRPG
         private void InitializeGame()
         {
             //플레이어 초기값
-            player = new Player(1, "전사", 10, 5, 100, 1500);
+            player = new Player(1, "Chad", "전사", 10, 5, 100, 1500);
 
 
             //몬스터 리스트 초기값
@@ -68,7 +68,7 @@ namespace TextRPG
             Console.WriteLine("캐릭터의 정보가 표기됩니다.");
             Console.WriteLine("");
             Console.WriteLine("Lv. {0}",player.Level);
-            Console.WriteLine("Chad : {0}",player.Chad);
+            Console.WriteLine("{0} : {1}", player.Name, player.Class);
             Console.WriteLine("공격력 : {0}",player.AtkPlayer);
             Console.WriteLine("방어력 : {0}",player.DfdPlayer);
             Console.WriteLine("체 력 : {0}",player.Hp);
@@ -106,7 +106,7 @@ namespace TextRPG
             //Console.WriteLine("Lv.1  Chad (전사) ");
             //Console.WriteLine("HP 100/100");
             Console.Write($"Lv.{player.Level} ");
-            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"{player.Name} ({player.Class})");
             Console.WriteLine($"HP {player.Hp}/{player.MaxHp}"); 
             Console.WriteLine("");
             Console.WriteLine("1. 공격");
@@ -141,7 +141,7 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
             Console.Write($"Lv.{player.Level} ");
-            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"Chad ({player.Class})");
             Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
             Console.WriteLine("");
             Console.WriteLine("0. 취소");
@@ -189,20 +189,36 @@ namespace TextRPG
             }
         }
 
-        private void EnemyPhase()
+        private void EnemyPhase(int choiceEnemy)
         {
+            Monster monster = monsterlist[choiceEnemy];
+
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("Lv.2 미니언 의 공격!");
-            Console.WriteLine("Chad 을(를) 맞췄습니다.  [데미지 : 6]");
-            Console.WriteLine("");
-            Console.WriteLine("Lv.1 Chad");
-            Console.WriteLine("HP 100 -> 94");
+
+            // 몬스터가 죽은 경우
+            if (monster.IsDead)
+            {
+                Console.WriteLine($"Lv.{monster.Level} {monster.Name} Dead");
+            }
+            else
+            {
+                // 몬스터가 살아있는 경우
+
+                Console.WriteLine($"Lv.{monster.Level} {monster.Name} 의 공격!");
+                Console.WriteLine($"{player.Name} 을(를) 맞췄습니다.  [데미지 : {monster.Attack}]");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{player.Level} {player.Name}");
+                Console.WriteLine($"HP {player.Hp} -> {player.Hp - monster.Attack}");
+
+                player.Hp -= (int)monster.Attack;
+            }
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
+
             int choice = ConsoleUtil.MenuChoice(0, 0);
 
             switch (choice)
