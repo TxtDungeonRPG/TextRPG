@@ -229,20 +229,40 @@ namespace TextRPG
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
             Console.WriteLine("{0}의 공격!",player.Name);
-            Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", monsterlist[choiceEnemy-1].Level, monsterlist[choiceEnemy-1].Name,damage);
-            Console.WriteLine("");
-            Console.WriteLine("Lv.{0} {1}", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
-            if (monsterlist[choiceEnemy-1].Hp - damage <= 0)
+            int attackChance = random.Next(100);
+            if (attackChance < 90)
             {
-                Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy-1].Hp);
-                monsterlist[choiceEnemy-1].IsDead = true;
-                monsterlist[choiceEnemy - 1].Hp = 0;
+                if (attackChance < 15)
+                {
+                    damage = (int)(damage * 1.6);
+                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}] - 치명타 공격!!",
+                        monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name, damage);
+
+                }
+                else
+                {
+                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", 
+                                        monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name, damage);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("Lv.{0} {1}", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
+                if (monsterlist[choiceEnemy - 1].Hp - damage <= 0)
+                {
+                    Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy - 1].Hp);
+                    monsterlist[choiceEnemy - 1].IsDead = true;
+                    monsterlist[choiceEnemy - 1].Hp = 0;
+                }
+                else
+                {
+                    Console.WriteLine("HP {0} -> {1}", monsterlist[choiceEnemy - 1].Hp, monsterlist[choiceEnemy - 1].Hp - damage);
+                    monsterlist[choiceEnemy - 1].Hp -= damage;
+                }
             }
             else
             {
-                Console.WriteLine("HP {0} -> {1}", monsterlist[choiceEnemy - 1].Hp, monsterlist[choiceEnemy-1].Hp-damage);
-                monsterlist[choiceEnemy - 1].Hp -= damage;
+                Console.WriteLine("Lv.{0} {1} 을(를) 공격했지만 아무일도 일어나지 않았습니다.", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
             }
+            
 
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
