@@ -351,28 +351,6 @@ namespace TextRPG
             }
         }
 
-        private void ResultBattle()
-        {
-
-            bool allDead = true; // 몬스터가 모두 죽었는지 판단
-            
-            // 몬스터가 한 마리라도 살아있으면, false
-            for(int i=0; i<monsterlist.Count; i++)
-            {
-                if (!monsterlist[i].IsDead) allDead = false;
-            }
-            // 모든 몬스터가 Dead 상태가 된다면 게임이 종료됩니다. → Victory
-            if (allDead)
-            {
-                Victory();
-            }
-            // 내 체력이 0이 되면 게임이 종료됩니다. → Lose
-            if(player.Hp <= 0)
-            {
-                Lose();
-            }                
-
-        }
 
         private void Victory()
         {
@@ -394,6 +372,8 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    monsterlist.Clear();
+                    isMonsterSpawned=false;
                     MainMenu();
                     break;
             }
@@ -409,10 +389,8 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("You Lose");
             Console.WriteLine("");
-            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
-            Console.WriteLine("");
-            Console.WriteLine("Lv. Chad");
-            Console.WriteLine("HP 100 -> 0");
+            Console.WriteLine("Lv{0} {1}", player.Level, player.Name);
+            Console.WriteLine("HP {0} -> 0", startHp);
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
@@ -421,6 +399,8 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    monsterlist.Clear();
+                    isMonsterSpawned=false;
                     MainMenu();
                     break;
             }
