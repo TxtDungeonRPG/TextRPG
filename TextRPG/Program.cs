@@ -25,6 +25,8 @@ namespace TextRPG
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
+
+            //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
             inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
             inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
             inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
@@ -172,9 +174,19 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("Lv. {0}",player.Level);
             Console.WriteLine("{0} ({1})", player.Name, player.Class);
-            Console.WriteLine("공격력 : {0}",player.AtkPlayer);
-            Console.WriteLine("방어력 : {0}",player.DfdPlayer);
-            Console.WriteLine("체 력 : {0}",player.Hp);
+
+            // TODO : 능력치 강화분을 표현하도록 변경
+
+            int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
+            int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
+            int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
+
+            Console.Write("공격력 : " + (player.AtkPlayer + bonusAtk).ToString());
+            if (bonusAtk > 0) Console.WriteLine($" (+{bonusAtk})"); else Console.WriteLine("");
+            Console.Write("방어력 : " + (player.DfdPlayer + bonusDef).ToString());
+            if (bonusDef > 0) Console.WriteLine($" (+{bonusDef})"); else Console.WriteLine("");
+            Console.Write("체 력 : " + (player.Hp + bonusHp).ToString());
+            if (bonusHp > 0) Console.WriteLine($" (+{bonusHp})"); else Console.WriteLine("");
             Console.WriteLine("Gold : {0} G",player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
