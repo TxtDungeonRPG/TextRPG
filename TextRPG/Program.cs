@@ -11,6 +11,7 @@ namespace TextRPG
         private Player player;
         private List<Monster> monsterlist;
         private bool isMonsterSpawned = false;
+        private int startHp;
 
         public GameManager()
         {
@@ -144,7 +145,7 @@ namespace TextRPG
                 }
                 isMonsterSpawned = true;
             }
-            
+            startHp = player.Hp; //전투 시작당시의 체력. Victory(), Lose()에서 사용하기 위한 값.
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
@@ -361,8 +362,8 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.", monsterlist.Count);
             Console.WriteLine("");
-            Console.WriteLine("Lv.{0} Chad", player.Level);
-            Console.WriteLine("HP 100 -> {0}", player.Hp); //전투시작 당시 체력값 받아와야함!
+            Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
+            Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
