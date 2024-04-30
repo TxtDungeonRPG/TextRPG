@@ -19,18 +19,22 @@ namespace TextRPG
 
         private void InitializeGame()
         {
-            string playerName = "default name";
-            //플레이어 초기값
-            player = new Player(1, "Chad", "전사", 10, 5, 100, 1500);
-
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
+            PlayerCreate();//캐릭터생성
+        }
 
-
+        private void PlayerCreate()
+        {
+            string playerName = "홍길동";
             Console.Clear();
             Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
             Console.WriteLine("원하시는 이름을 설정해주세요");
             playerName = Console.ReadLine();
+            if (playerName == "")
+            {
+                playerName = "홍길동";
+            }
             Console.Clear();
             Console.WriteLine("■ 직업 선택 ■");
             Console.WriteLine("1. 전사\n2. 마법사\n3. 도적\n4. 해적");
@@ -39,18 +43,17 @@ namespace TextRPG
             switch (choice)
             {
                 case 1:
-                    player = new Player(1, "전사", 8, 7, 100, 1500);
+                    player = new Player(1, playerName, "전사", 8, 7, 100, 1500);
                     break;
                 case 2:
-                    player = new Player(1, "마법사", 12, 3, 100, 1500);
+                    player = new Player(1, playerName, "마법사", 12, 3, 100, 1500);
                     break;
                 case 3:
-                    player = new Player(1, "도적", 11, 4, 100, 2000);
+                    player = new Player(1, playerName, "도적", 11, 4, 100, 2000);
                     break;
                 case 4:
-                    player = new Player(1, "해적", 10, 5, 100, 1700);
+                    player = new Player(1, playerName, "해적", 10, 5, 100, 1700);
                     break;
-
             }
         }
 
@@ -95,7 +98,7 @@ namespace TextRPG
             Console.WriteLine("캐릭터의 정보가 표기됩니다.");
             Console.WriteLine("");
             Console.WriteLine("Lv. {0}",player.Level);
-            Console.WriteLine("{0} : {1}", player.Name, player.Class);
+            Console.WriteLine("{0} ({1})", player.Name, player.Class);
             Console.WriteLine("공격력 : {0}",player.AtkPlayer);
             Console.WriteLine("방어력 : {0}",player.DfdPlayer);
             Console.WriteLine("체 력 : {0}",player.Hp);
