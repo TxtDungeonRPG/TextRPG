@@ -13,6 +13,7 @@ public class Player
     public int Mp;
     public int MaxMp;
     public int Gold;
+	public int Exp;
 
 	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int mp, int gold)
 	{
@@ -26,6 +27,22 @@ public class Player
 		Mp = mp;
 		MaxMp = mp;
 		Gold = gold;
+		Exp = 0;
+	}
+
+	public bool LevelUpcheck()
+	{
+        int[] needExp = { 10, 35, 65, 100 };
+
+        if ((Level<= 4) && Exp >= needExp[Level-1])
+		{
+			Level++;
+			AtkPlayer += 0.5f;
+			DfdPlayer += 1;
+			Exp = 0;
+			return true;
+		}
+		return false;
 	}
 
 	public void PlayerInfo()
