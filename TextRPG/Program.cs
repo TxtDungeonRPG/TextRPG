@@ -295,10 +295,10 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("Victory");
             Console.WriteLine("");
-            Console.WriteLine($"던전에서 몬스터 {monsterlist.Count}마리를 잡았습니다.");
+            Console.WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.", monsterlist.Count);
             Console.WriteLine("");
-            Console.WriteLine("Lv.1 Chad");
-            Console.WriteLine("HP 100 -> 74");
+            Console.WriteLine("Lv.{0} Chad", player.Level);
+            Console.WriteLine("HP 100 -> {0}", player.Hp); //전투시작 당시 체력값 받아와야함!
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
@@ -323,7 +323,7 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
             Console.WriteLine("");
-            Console.WriteLine("Lv.1 Chad");
+            Console.WriteLine("Lv. Chad");
             Console.WriteLine("HP 100 -> 0");
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
