@@ -25,6 +25,9 @@ namespace TextRPG
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
+            inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
+            inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
+            inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
         }
 
         private void PlayerCreate()
@@ -102,7 +105,61 @@ namespace TextRPG
 
         private void InventoryMenu()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+
+            Console.WriteLine("■ 인벤토리 ■");
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                inventory[i].PrintItemStatDescription();
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("1. 장착관리");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            switch (choice)
+            {
+                case 0: 
+                    MainMenu();
+                    break;
+                case 1:
+                    EquipMenu();
+                    break;
+            }
+        }
+
+        private void EquipMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 인벤토리 - 장착 관리 ■");
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                inventory[i].PrintItemStatDescription(true, i + 1); // 나가기가 0번 고정, 나머지가 1번부터 배정
+            }
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+
+            int choice = ConsoleUtil.MenuChoice(0, inventory.Count, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 0:
+                    InventoryMenu();
+                    break;
+                default:
+                    inventory[choice - 1].ToggleEquipStatus();
+                    EquipMenu();
+                    break;
+            }
         }
 
         private void StatusMenu()
