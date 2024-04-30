@@ -14,8 +14,9 @@ public class Player
     public int MaxMp;
     public int Gold;
 	public int Exp;
+	public Skill[] Skills;
 
-	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int mp, int gold)
+	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int mp, int gold, Skill[] skills)
 	{
 		Level = level;
 		Name = name;
@@ -28,7 +29,8 @@ public class Player
 		MaxMp = mp;
 		Gold = gold;
 		Exp = 0;
-	}
+        Skills = skills;
+    }
 
 	public bool LevelUpcheck()
 	{

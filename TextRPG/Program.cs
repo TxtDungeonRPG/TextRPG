@@ -40,20 +40,23 @@ namespace TextRPG
             Console.WriteLine("■ 직업 선택 ■");
             Console.WriteLine("1. 전사\n2. 마법사\n3. 도적\n4. 해적");
 
+            Skill[] skills = [new Skill("알파 스트라이크", 10, 2, 1), new Skill("더블 스트라이크", 15, 1.5f, 2)];
+
             int choice = ConsoleUtil.MenuChoice(0, 4, "원하시는 직업을 입력해주세요.");
+
             switch (choice)
             {
                 case 1:
-                    player = new Player(1, playerName, "전사", 8, 7, 100, 30, 1500);
+                    player = new Player(1, playerName, "전사", 8, 7, 100, 30, 1500, skills);
                     break;
                 case 2:
-                    player = new Player(1, playerName, "마법사", 12, 3, 100, 80, 1500);
+                    player = new Player(1, playerName, "마법사", 12, 3, 100, 80, 1500, skills);
                     break;
                 case 3:
-                    player = new Player(1, playerName, "도적", 11, 4, 100, 50, 2000);
+                    player = new Player(1, playerName, "도적", 11, 4, 100, 50, 2000, skills);
                     break;
                 case 4:
-                    player = new Player(1, playerName, "해적", 10, 5, 100, 50, 1700);
+                    player = new Player(1, playerName, "해적", 10, 5, 100, 50, 1700, skills);
                     break;
             }
         }
@@ -287,7 +290,6 @@ namespace TextRPG
 
         private void SkillMenu()
         {
-            int choice;
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
@@ -301,30 +303,69 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("");
 
-            Console.WriteLine("0. 취소");
-            Console.WriteLine("1. 알파 스트라이크 - MP 10\n공격력 * 2 로 하나의 적을 공격합니다.");
-            Console.WriteLine("2. 더블 스트라이크 - MP 15\n공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.");
-            do
+            for(int i = 0; i < player.Skills.Length; i++) 
             {
-                choice = ConsoleUtil.MenuChoice(0, monsterlist.Count, "대상을 선택해주세요.");
-                if (choice != 0 && monsterlist[choice - 1].IsDead)
+                Skill skill = player.Skills[i];
+                // 대상이 한명인 경우
+                if (skill.DamageAmount == 1) 
                 {
-                    Console.WriteLine("이미 죽은 몬스터입니다");
+                     Console.WriteLine($"{i+1}. {skill.Name} - MP {skill.ExpendMp}");
+                     Console.WriteLine($"   공격력 * {skill.DamageScale} 로 하나의 적을 공격합니다.");
+                }
+                // 대상이 여러명인 경우
+                else if (skill.DamageAmount >= 2) 
+                {
+                    Console.WriteLine($"{i + 1}. {skill.Name} - MP {skill.ExpendMp}");
+                    Console.WriteLine($"   공격력 * {skill.DamageScale} 로 {skill.DamageAmount}명의 적을 랜덤으로 공격합니다.");
+
                 }
             }
-            while (choice != 0 && monsterlist[choice - 1].IsDead);
+            Console.WriteLine("0. 취소");
 
-            if (choice == 0)
+            int choice = ConsoleUtil.MenuChoice(0, player.Skills.Length);
+
+            if(choice == 0)
             {
                 StartBattleMenu();
-
             }
             else
             {
-                Attack(choice);
+                Skill(choice);
             }
-
         }
+
+        private void Skill(int choiceSkill)
+        {
+            Random random = new Random();
+            int damage = (int)player.AtkPlayer + random.Next((int)Math.Floor(player.AtkPlayer * (-0.1)), (int)Math.Ceiling(player.AtkPlayer * 0.1));
+            Console.Clear();
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            Console.WriteLine("{0}의 공격!", player.Name);
+
+            Console.WriteLine("");
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 0);
+
+            switch (choice)
+            {
+                case 0:
+                    // 몬스터가 모두 죽은경우 승리
+                    foreach (var monster in monsterlist)
+                    {
+                        if (!monster.IsDead)
+                        {
+                            EnemyPhase();
+                        }
+                    }
+                    Victory();
+                    break;
+            }
+        }
+
+
 
 
         private void EnemyPhase()
