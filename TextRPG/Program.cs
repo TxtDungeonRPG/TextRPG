@@ -12,6 +12,7 @@ namespace TextRPG
         private List<Monster> monsterlist;
         private bool isMonsterSpawned = false;
         private int startHp;
+        private List<Item> inventory;
 
         public GameManager()
         {
@@ -23,6 +24,12 @@ namespace TextRPG
             //몬스터 리스트 초기값
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
+            inventory = new List<Item>();
+
+            //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
+            inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
+            inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
+            inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
         }
 
         private void PlayerCreate()
@@ -74,8 +81,10 @@ namespace TextRPG
 
             Console.WriteLine("1. 상태보기");
             Console.WriteLine("2. 전투시작");
+            Console.WriteLine("3. 인벤토리");
+            Console.WriteLine("4. 퀘스트");
             Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(1, 2, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(1, 4, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
@@ -85,9 +94,74 @@ namespace TextRPG
                 case 2:
                     StartBattleMenu();
                     break;
+                case 3:
+                    InventoryMenu();
+                    break;
+                case 4:
+                    StartQuestMenu();
+                    break;
 
             }
             MainMenu();
+        }
+
+        private void InventoryMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 인벤토리 ■");
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                inventory[i].PrintItemStatDescription();
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("1. 장착관리");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            switch (choice)
+            {
+                case 0: 
+                    MainMenu();
+                    break;
+                case 1:
+                    EquipMenu();
+                    break;
+            }
+        }
+
+        private void EquipMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 인벤토리 - 장착 관리 ■");
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                inventory[i].PrintItemStatDescription(true, i + 1); // 나가기가 0번 고정, 나머지가 1번부터 배정
+            }
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+
+            int choice = ConsoleUtil.MenuChoice(0, inventory.Count, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 0:
+                    InventoryMenu();
+                    break;
+                default:
+                    inventory[choice - 1].ToggleEquipStatus();
+                    EquipMenu();
+                    break;
+            }
         }
 
         private void StatusMenu()
@@ -100,9 +174,19 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("Lv. {0}",player.Level);
             Console.WriteLine("{0} ({1})", player.Name, player.Class);
-            Console.WriteLine("공격력 : {0}",player.AtkPlayer);
-            Console.WriteLine("방어력 : {0}",player.DfdPlayer);
-            Console.WriteLine("체 력 : {0}",player.Hp);
+
+            // TODO : 능력치 강화분을 표현하도록 변경
+
+            int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
+            int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
+            int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
+
+            Console.Write("공격력 : " + (player.AtkPlayer + bonusAtk).ToString());
+            if (bonusAtk > 0) Console.WriteLine($" (+{bonusAtk})"); else Console.WriteLine("");
+            Console.Write("방어력 : " + (player.DfdPlayer + bonusDef).ToString());
+            if (bonusDef > 0) Console.WriteLine($" (+{bonusDef})"); else Console.WriteLine("");
+            Console.Write("체 력 : " + (player.Hp + bonusHp).ToString());
+            if (bonusHp > 0) Console.WriteLine($" (+{bonusHp})"); else Console.WriteLine("");
             Console.WriteLine("Gold : {0} G",player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
@@ -257,6 +341,7 @@ namespace TextRPG
                     Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy - 1].Hp);
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
+                    player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
                 }
                 else
                 {
@@ -373,6 +458,14 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
+
+            //레벨업 확인
+            if (player.LevelUpcheck()){ 
+                Console.SetCursorPosition(0, 6);
+                Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level-1, player.Name, player.Level);
+                Console.SetCursorPosition(0, 11);
+            }
+
             int choice = ConsoleUtil.MenuChoice(0, 0);
 
             switch (choice)
@@ -411,7 +504,16 @@ namespace TextRPG
                     break;
             }
             Lose();
-        }}
+        }
+        private void StartQuestMenu()
+        {
+
+
+        }
+
+    }
+
+
 
 
 
