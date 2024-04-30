@@ -229,21 +229,41 @@ namespace TextRPG
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
             Console.WriteLine("{0}의 공격!",player.Name);
-            Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", monsterlist[choiceEnemy-1].Level, monsterlist[choiceEnemy-1].Name,damage);
-            Console.WriteLine("");
-            Console.WriteLine("Lv.{0} {1}", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
-            if (monsterlist[choiceEnemy-1].Hp - damage <= 0)
+            int attackChance = random.Next(100);
+            if (attackChance < 90)
             {
-                Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy-1].Hp);
-                monsterlist[choiceEnemy - 1].IsDead = true;
-                monsterlist[choiceEnemy - 1].Hp = 0;
-                player.Exp++;
+                if (attackChance < 15)
+                {
+                    damage = (int)(damage * 1.6);
+                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}] - 치명타 공격!!",
+                        monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name, damage);
+
+                }
+                else
+                {
+                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", 
+                                        monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name, damage);
+                }
+                Console.WriteLine("");
+                Console.WriteLine("Lv.{0} {1}", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
+                if (monsterlist[choiceEnemy - 1].Hp - damage <= 0)
+                {
+                    Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy - 1].Hp);
+                    monsterlist[choiceEnemy - 1].IsDead = true;
+                    monsterlist[choiceEnemy - 1].Hp = 0;
+                    player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
+                }
+                else
+                {
+                    Console.WriteLine("HP {0} -> {1}", monsterlist[choiceEnemy - 1].Hp, monsterlist[choiceEnemy - 1].Hp - damage);
+                    monsterlist[choiceEnemy - 1].Hp -= damage;
+                }
             }
             else
             {
-                Console.WriteLine("HP {0} -> {1}", monsterlist[choiceEnemy - 1].Hp, monsterlist[choiceEnemy-1].Hp-damage);
-                monsterlist[choiceEnemy - 1].Hp -= damage;
+                Console.WriteLine("Lv.{0} {1} 을(를) 공격했지만 아무일도 일어나지 않았습니다.", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
             }
+            
 
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
@@ -332,26 +352,6 @@ namespace TextRPG
             }
         }
 
-        private void ResultBattle()
-        {
-            bool allDead = true; // 몬스터가 모두 죽었는지 판단
-            
-            // 몬스터가 한 마리라도 살아있으면, false
-            for(int i=0; i<monsterlist.Count; i++)
-            {
-                if (!monsterlist[i].IsDead) allDead = false;
-            }
-            // 모든 몬스터가 Dead 상태가 된다면 게임이 종료됩니다. → Victory
-            if (allDead)
-            {
-                Victory();
-            }
-            // 내 체력이 0이 되면 게임이 종료됩니다. → Lose
-            if(player.Hp <= 0)
-            {
-                Lose();
-            }                
-        }
 
         private void Victory()
         {
@@ -381,11 +381,14 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    monsterlist.Clear();
+                    isMonsterSpawned=false;
                     MainMenu();
                     break;
             }
             Victory();
         }
+
 
         private void Lose()
         {
@@ -395,10 +398,8 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("You Lose");
             Console.WriteLine("");
-            Console.WriteLine("던전에서 몬스터 3마리를 잡았습니다.");
-            Console.WriteLine("");
-            Console.WriteLine("Lv. Chad");
-            Console.WriteLine("HP 100 -> 0");
+            Console.WriteLine("Lv{0} {1}", player.Level, player.Name);
+            Console.WriteLine("HP {0} -> 0", startHp);
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
@@ -407,17 +408,18 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    monsterlist.Clear();
+                    isMonsterSpawned=false;
                     MainMenu();
                     break;
             }
             Lose();
-        }
+        }}
 
-
-    }
 
 
     class Program
+   
     {
         static void Main(string[] args)
         {
