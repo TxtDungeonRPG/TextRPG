@@ -13,6 +13,7 @@ namespace TextRPG
         private bool isMonsterSpawned = false;
         private int startHp;
         private List<Item> inventory;
+        private List<Quest> QuestList;
 
         public GameManager()
         {
@@ -25,6 +26,10 @@ namespace TextRPG
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
+            QuestList = new List<Quest>();
+            QuestList.Add(new Quest1());
+            QuestList.Add(new Quest2());
+            QuestList.Add(new Quest3());
         }
 
         private void PlayerCreate()
@@ -432,7 +437,53 @@ namespace TextRPG
         }
         private void StartQuestMenu()
         {
+            int count = 0;
 
+            Console.Clear();
+            Console.WriteLine("■ Quest ■\n");
+            foreach(Quest exquest in QuestList)
+            {
+                count++;
+                Console.WriteLine($"{count}. {exquest.QuestTitle}");
+            }
+
+            int choice = ConsoleUtil.MenuChoice(0, count, "\n0. 돌아가기\n원하시는 퀘스트를 입력해주세요.");
+
+            if (choice == 0)
+            {
+                MainMenu();
+            }
+            else
+            {
+                QuestDescription(choice);
+            }
+
+        }
+
+        private void QuestDescription(int questChoice)
+        {
+
+            Console.Clear();
+            Console.WriteLine("■ Quest ■\n");
+            Console.WriteLine($"{QuestList[questChoice-1].QuestTitle}\n");
+            Console.WriteLine($"{QuestList[questChoice - 1].QuestScript}\n");
+            Console.WriteLine($" - {QuestList[questChoice - 1].QuestWhatToDo}\n");
+            Console.WriteLine($" -  보상  - \n");
+            //추후 보상 추가
+
+            //퀘스트의 완료 여부에 따라 선택지 변경
+            if (QuestList[questChoice-1].IsDone) 
+            {
+                Console.WriteLine("1. 보상 받기");
+                Console.WriteLine("2. 돌아가기");
+            }
+            else
+            {
+                Console.WriteLine("1. 수락");
+                Console.WriteLine("2. 거절");
+            }
+
+            int choice = ConsoleUtil.MenuChoice(0, 2, "\n0. 돌아가기\n원하시는 행동을 입력해주세요.");//숫자 수정하기
 
         }
 
