@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Xml.Serialization;
 
 namespace TextRPG
 {
@@ -159,6 +160,7 @@ namespace TextRPG
 
         private void AttackMenu()
         {
+            int choice;
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
@@ -175,8 +177,16 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("0. 취소");
             Console.WriteLine("");
-
-            int choice = ConsoleUtil.MenuChoice(0, 3, "대상을 선택해주세요.");
+            do
+            {
+                choice = ConsoleUtil.MenuChoice(0, 3, "대상을 선택해주세요.");
+                if (choice != 0 && monsterlist[choice - 1].IsDead)
+                {
+                    Console.WriteLine("이미 죽은 몬스터입니다");
+                }
+            }
+            while (choice != 0 && monsterlist[choice - 1].IsDead);
+            
 
             switch (choice)
             {
@@ -194,16 +204,30 @@ namespace TextRPG
 
         private void Attack(int choiceEnemy)
         {
+            Random random = new Random();
+            int damage = (int)player.AtkPlayer+random.Next((int)Math.Floor(player.AtkPlayer*(-0.1)), (int)Math.Ceiling(player.AtkPlayer*0.1));
             Console.Clear();
-
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("Chad 의 공격!");
-            Console.WriteLine("Lv.3 공허충 을(를) 맞췄습니다. [데미지 : 10]");
+            Console.WriteLine("{0}의 공격!",player.Chad);
+            Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", monsterlist[choiceEnemy-1].Level, monsterlist[choiceEnemy-1].Name,damage);
             Console.WriteLine("");
-            Console.WriteLine("Lv.3 공허충");
-            Console.WriteLine("HP 10 -> Dead");
-            Console.WriteLine("HP 100/100");
+            Console.WriteLine("Lv.{0} {1}", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
+            if (monsterlist[choiceEnemy-1].Hp - damage <= 0)
+            {
+                Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy-1].Hp);
+                monsterlist[choiceEnemy-1].IsDead = true;
+                monsterlist[choiceEnemy - 1].Hp = 0;
+            }
+            else
+            {
+                Console.WriteLine("HP {0} -> {1}", monsterlist[choiceEnemy - 1].Hp, monsterlist[choiceEnemy-1].Hp-damage);
+                monsterlist[choiceEnemy - 1].Hp -= damage;
+            }
+
+            Console.Write($"Lv.{player.Level} ");
+            Console.WriteLine($"Chad ({player.Chad})");
+            Console.WriteLine($"HP {player.Hp}/{player.MaxHp}");
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
