@@ -10,6 +10,7 @@ public class Player
     public int Hp;
 	public int MaxHp;
     public int Gold;
+	public int Exp;
 
 	public Player(int level, string name, string _class, float atkPlayer,float dfdPlayer, int hp, int gold)
 	{
@@ -21,6 +22,22 @@ public class Player
 		Hp = hp;
 		MaxHp = hp;
 		Gold = gold;
+		Exp = 0;
+	}
+
+	public bool LevelUpcheck()
+	{
+        int[] needExp = { 1, 2, 65, 100 };
+
+        if ((Level<= 4) && Exp >= needExp[Level-1])
+		{
+			Level++;
+			AtkPlayer += 0.5f;
+			DfdPlayer += 1;
+			Exp = 0;
+			return true;
+		}
+		return false;
 	}
 
 

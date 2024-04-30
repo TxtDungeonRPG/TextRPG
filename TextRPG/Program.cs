@@ -235,8 +235,9 @@ namespace TextRPG
             if (monsterlist[choiceEnemy-1].Hp - damage <= 0)
             {
                 Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy-1].Hp);
-                monsterlist[choiceEnemy-1].IsDead = true;
+                monsterlist[choiceEnemy - 1].IsDead = true;
                 monsterlist[choiceEnemy - 1].Hp = 0;
+                player.Exp++;
             }
             else
             {
@@ -367,6 +368,14 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
+
+            //레벨업 확인
+            if (player.LevelUpcheck()){ 
+                Console.SetCursorPosition(0, 6);
+                Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level-1, player.Name, player.Level);
+                Console.SetCursorPosition(0, 11);
+            }
+
             int choice = ConsoleUtil.MenuChoice(0, 0);
 
             switch (choice)
