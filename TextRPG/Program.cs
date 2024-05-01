@@ -521,7 +521,7 @@ namespace TextRPG
                     Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy - 1].Hp);
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
-                    player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
+                    //player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
 
                     QuestList[0].Changenum(1);
 
@@ -689,7 +689,7 @@ namespace TextRPG
                     selectedMonster.IsDead = true;
                     selectedMonster.Hp = 0;
                     // 경험치
-                    player.Exp += (int)selectedMonster.Level;
+                    //player.Exp += (int)selectedMonster.Level;
                     // 퀘스트
                     QuestList[0].Changenum(1);
                 }
@@ -729,7 +729,7 @@ namespace TextRPG
                         monsterlist[index].IsDead = true;
                         monsterlist[index].Hp = 0;
                         // 경험치
-                        player.Exp += (int)monsterlist[index].Level;
+                        //player.Exp += (int)monsterlist[index].Level;
                         // 퀘스트
                         QuestList[0].Changenum(1);
 
@@ -848,7 +848,10 @@ namespace TextRPG
             Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
             Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
             Console.WriteLine("");
-            
+            foreach(var monster in monsterlist)
+            {
+                player.Exp += (int)monster.Level;
+            }
             //레벨업 확인
             if (player.LevelUpcheck()) 
             {
