@@ -88,7 +88,7 @@ public class Item
             //Console.ResetColor();
         }
         //else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 12));
-
+        Console.Write(Name);
         Console.Write(" | ");
 
         if (Atk != 0) Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
@@ -98,6 +98,7 @@ public class Item
         Console.Write(" | ");
 
         //Console.Write(ConsoleUtility.PadRightForMixedText(Desc, 12));
+        Console.Write(Desc);
 
         Console.Write(" | ");
 
@@ -108,6 +109,7 @@ public class Item
         else
         {
             //ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+            Console.WriteLine(""+Price.ToString()+" G");
         }
     }
 
