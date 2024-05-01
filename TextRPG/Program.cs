@@ -456,6 +456,10 @@ namespace TextRPG
             Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
             Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
             Console.WriteLine("");
+            //획득 아이템
+            DropItem();
+            Console.WriteLine("");
+
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
 
@@ -509,6 +513,36 @@ namespace TextRPG
         {
 
 
+        }
+
+        private void DropItem()
+        {
+            // 몬스터 별 잡을을 때 보상 추가
+            // 경험치, 골드, 아이템 등
+            int gold = 0, potion = 0, sword = 0;
+            Random random = new Random();
+            foreach (var item in monsterlist) {
+                int reward = random.Next(0, 100);
+                if (reward >= 0 && reward < 50) 
+                {
+                    gold += 500;
+                }
+                else if (reward >= 50 && reward < 75)
+                {
+                    potion++;
+                }
+                else
+                {
+                    sword++;
+                }
+            }
+            Console.WriteLine("[획득 아이템]");
+            if(gold>0) Console.WriteLine("{0} Gold", gold);
+            if(potion>0) Console.WriteLine("포션 - {0}", potion);
+            if(sword>0) Console.WriteLine("낡은검 - {0}", sword);
+            player.Gold += gold;
+            // Inventory.Add(new postion()); - 포션 클래스 추가가 필요해보입니다
+            for(int i=0; i<sword; i++) inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
         }
 
     }
