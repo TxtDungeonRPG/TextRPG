@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TextRPG
 {
@@ -378,6 +379,7 @@ namespace TextRPG
             }
         }
 
+        // 스킬 선택 메뉴
         private void SkillMenu()
         {
             Console.Clear();
@@ -420,20 +422,106 @@ namespace TextRPG
             }
             else
             {
-                Skill(choice);
+                // 단일 스킬을 선택한 경우 몬스터 선택메뉴 이동
+                if (player.Skills[choice].DamageAmount == 1)
+                {
+                    SkillMenu(choice); 
+                }
+                // 랜덤 스킬을 선택한 경우 스킬사용
+                else
+                {
+                    Skill(choice);
+                }
+                
+               
             }
         }
 
-        private void Skill(int choiceSkill)
+        // 단일 스킬을 선택한경우 몬스터 선택 활성화
+        private void SkillMenu(int choiceSkill)
         {
-            Random random = new Random();
-            int damage = (int)player.AtkPlayer + random.Next((int)Math.Floor(player.AtkPlayer * (-0.1)), (int)Math.Ceiling(player.AtkPlayer * 0.1));
+            Console.Clear();
+
+            Console.WriteLine("■ Battle!! ■");
+            Console.WriteLine("");
+            for (int i = 0; i < monsterlist.Count; i++)
+            {
+                monsterlist[i].PrintMonsterDescription(true, i + 1);
+            }
+            Console.WriteLine("");
+            player.PlayerInfo();
+            Console.WriteLine("");
+            Console.WriteLine("");
+
+            Console.WriteLine("0. 취소");
+
+            int choice;
+
+            IsCheckDeadMonster(out choice);
+
+            if (choice == 0)
+            {
+                SkillMenu();
+            }
+            else
+            {
+                Skill(choiceSkill, choice);
+            }
+        }
+
+
+        private void Skill(int skillIndex, int monsterIndex = 0)
+        {
+            Skill useSkill = player.Skills[skillIndex];
+            float skillDamage = player.AtkPlayer * useSkill.DamageScale;
+
             Console.Clear();
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("{0}의 공격!", player.Name);
+            Console.WriteLine($"{player.Name}의 {useSkill.Name}!");
+         
+            // 한마리 공격하는 경우 
+            if (useSkill.DamageAmount == 1)
+            {
+                Console.WriteLine($"Lv.{monsterlist[monsterIndex].Level}  {monsterlist[monsterIndex].Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
 
-            Console.WriteLine("");
+            }
+            // 여러 마리 공격하는 경우
+            else
+            {
+                Random random = new Random();
+
+                // 랜덤으로 공격할 몬스터의 정한다.
+                List<int> selectedIndexList = GetRandomElements(monsterlist.Count, useSkill.DamageAmount);
+
+                // 랜덤으로 몬스터를 맞추고 표시
+                for (int i = 0; i < selectedIndexList.Count; i++)
+                {
+                    Console.WriteLine($"Lv.{monsterlist[i].Level}  {monsterlist[i].Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+                }
+                Console.WriteLine("");
+                for (int i = 0; i < selectedIndexList.Count; i++)
+                {
+                    Console.WriteLine($"Lv.{monsterlist[i].Level}  {monsterlist[i].Name}");
+
+                    if(monsterlist[i].Hp - skillDamage <= 0)
+                    {
+                        // 몬스터가 죽은 경우
+
+                        Console.WriteLine($"HP {monsterlist[i].Hp} -> Dead");
+                        monsterlist[i].IsDead = true;
+                        monsterlist[i].Hp = 0;
+                        // 경험치
+                        player.Exp += (int)monsterlist[i].Level; 
+                    }
+                    else
+                    {
+                        Console.WriteLine($"HP {monsterlist[i].Hp} -> {monsterlist[i].Hp - skillDamage}");
+                        monsterlist[i].Hp -= skillDamage;
+                    }
+                }
+            }
+
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
 
@@ -592,6 +680,40 @@ namespace TextRPG
 
         }
 
+        // 0 부터 입력된 숫자중 n 개를 중복없이 랜덤으로 선택하는 기능
+        public List<int> GetRandomElements(int num, int n)
+        {
+            Random rand = new Random();
+
+            // 리스트에서 m개의 요소를 랜덤으로 선택하여 새 리스트에 추가
+            List<int> randomNumbers = new List<int>();
+
+            while (randomNumbers.Count < n)
+            {
+                int randomIndex = rand.Next(0, num);
+                // 중복되지않는 index를 담고 있지않다면 담는다.
+                if (!randomNumbers.Contains(randomIndex))
+                {
+                    randomNumbers.Add(randomIndex);
+                }
+            }
+
+            return randomNumbers;
+        }
+
+
+        public void IsCheckDeadMonster(out int choice)
+        {
+            do
+            {
+                choice = ConsoleUtil.MenuChoice(0, monsterlist.Count, "대상을 선택해주세요.");
+                if (choice != 0 && monsterlist[choice - 1].IsDead)
+                {
+                    Console.WriteLine("이미 죽은 몬스터입니다");
+                }
+            }
+            while (choice != 0 && monsterlist[choice - 1].IsDead);
+        }
     }
 
 
