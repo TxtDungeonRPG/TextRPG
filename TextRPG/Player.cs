@@ -8,11 +8,45 @@ public class Player
     public string Class;
     public float AtkPlayer;
     public float DfdPlayer;
-    public int Hp;
-	public int MaxHp;
-    public int Mp;
+
+    private int _hp;
+    public int Hp
+    {
+        get { return _hp; }
+        set
+        {
+            // Hp가 0 이하인 경우 0으로 설정
+            _hp = Math.Max(value, 0);
+        }
+    }
+
+    public int MaxHp;
+
+    private int _mp;
+    public int Mp
+    {
+        get { return _mp; }
+        set
+        {
+            // Hp가 0 이하인 경우 0으로 설정
+            _mp = Math.Max(value, 0);
+        }
+    }
+
     public int MaxMp;
-    public int Gold;
+
+    private int _gold;
+
+    public int Gold
+    {
+        get { return _gold; }
+        set
+        {
+            // Hp가 0 이하인 경우 0으로 설정
+            _gold = Math.Max(value, 0);
+        }
+    }
+
 	public int Exp;
 	public Skill[] Skills;
 

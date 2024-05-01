@@ -663,6 +663,8 @@ namespace TextRPG
             // 공격할 몬스터가 있는 경우
             if (monster != null)
             {
+                int decreasedHealth = (player.Hp - (int)monster.Attack) < 0 ? 0 : player.Hp - (int)monster.Attack;
+
                 Console.Clear();
 
                 Console.WriteLine("■ Battle!! ■");
@@ -672,7 +674,7 @@ namespace TextRPG
                 Console.WriteLine($"{player.Name} 을(를) 맞췄습니다.  [데미지 : {monster.Attack}]");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
-                Console.WriteLine($"HP {player.Hp} -> {player.Hp - monster.Attack}");
+                Console.WriteLine($"HP {player.Hp} -> {decreasedHealth}");
 
                 player.Hp -= (int)monster.Attack;
             }
