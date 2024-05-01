@@ -14,6 +14,8 @@ namespace TextRPG
         private int startHp;
         private List<Item> inventory;
 
+
+
         public GameManager()
         {
             InitializeGame();

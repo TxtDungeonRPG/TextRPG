@@ -10,7 +10,7 @@ public enum ItemType
     ARMOR
 }
 
-internal class Item
+public class Item
 {
     public string Name { get; }
     public string Desc { get; }
@@ -147,7 +147,7 @@ internal class Postion
         Console.Write("- ");
         if (withNumber)
         {
-
+            Console.Write("{0} ", idx);
         }
         if (IsEquipped)
         {
