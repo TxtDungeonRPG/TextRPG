@@ -502,6 +502,8 @@
                     selectedMonster.Hp = 0;
                     // 경험치
                     player.Exp += (int)selectedMonster.Level;
+                    // 퀘스트
+                    QuestList[0].Changenum(1);
                 }
                 else
                 {
@@ -519,7 +521,7 @@
                 List<int> selectedIndexList = GetRandomMonsterIdx(monsterlist, useSkill.DamageAmount);
 
 
-               
+        
                 // 랜덤으로 몬스터를 맞추고 표시
                 foreach (int index in selectedIndexList) 
                 {
@@ -540,6 +542,9 @@
                         monsterlist[index].Hp = 0;
                         // 경험치
                         player.Exp += (int)monsterlist[index].Level;
+                        // 퀘스트
+                        QuestList[0].Changenum(1);
+
                     }
                     else
                     {
