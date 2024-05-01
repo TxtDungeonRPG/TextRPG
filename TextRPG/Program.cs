@@ -15,6 +15,7 @@ namespace TextRPG
         private bool isMonsterSpawned = false;
         private int startHp;
         private List<Item> inventory;
+        private List<Item> storeInventory;
         private List<Quest> QuestList;
         private Potion potion;
         public GameManager()
@@ -29,9 +30,15 @@ namespace TextRPG
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
             //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
-            inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
-            inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
-            inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+            //inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
+            //inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
+            //inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+            //상점 아이템 목록
+            storeInventory = new List<Item>();
+            storeInventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
+            storeInventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
+            storeInventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+
             QuestList = new List<Quest>();
             QuestList.Add(new Quest1());
             QuestList.Add(new Quest2());
@@ -94,8 +101,9 @@ namespace TextRPG
             Console.WriteLine("3. 인벤토리");
             Console.WriteLine("4. 퀘스트");
             Console.WriteLine("5. 회복 아이템");
+            Console.WriteLine("6. 아이템 상점");
             Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(1, 5, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(1, 6, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
@@ -114,7 +122,9 @@ namespace TextRPG
                 case 5:
                     PotionMenu();
                     break;
-
+                case 6:
+                    StoreMenu();
+                    break;
             }
             MainMenu();
         }
@@ -174,6 +184,94 @@ namespace TextRPG
                 default:
                     inventory[choice - 1].ToggleEquipStatus();
                     EquipMenu();
+                    break;
+            }
+        }
+
+        private void StoreMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 상점 ■");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine(player.Gold.ToString() + " G");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+            for (int i = 0; i < storeInventory.Count; i++)
+            {
+                storeInventory[i].PrintStoreItemDescription();
+            }
+            Console.WriteLine("");
+            Console.WriteLine("1. 아이템 구매");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("");
+            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            switch (choice)
+            {
+                case 0:
+                    MainMenu();
+                    break;
+                case 1:
+                    PurchaseMenu();
+                    break;
+            }
+        }
+
+        private void PurchaseMenu(string? prompt = null)
+        {
+            if (prompt != null)
+            {
+                // 1초간 메시지를 띄운 다음에 다시 진행
+                Console.Clear();
+                Console.WriteLine(prompt);
+                Thread.Sleep(1000);
+            }
+
+            Console.Clear();
+
+            Console.WriteLine("■ 상점 ■");
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+            Console.WriteLine("");
+            Console.WriteLine("[보유 골드]");
+            Console.WriteLine(player.Gold.ToString() + " G");
+            Console.WriteLine("");
+            Console.WriteLine("[아이템 목록]");
+            for (int i = 0; i < storeInventory.Count; i++)
+            {
+                storeInventory[i].PrintStoreItemDescription(true, i + 1);
+            }
+            Console.WriteLine("");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, storeInventory.Count, "원하시는 행동을 입력해주세요.");
+
+            switch (choice)
+            {
+                case 0:
+                    StoreMenu();
+                    break;
+                default:
+                    // 1 : 이미 구매한 경우
+                    if (storeInventory[choice - 1].IsPurchased) // index 맞추기
+                    {
+                        PurchaseMenu("이미 구매한 아이템입니다.");
+                    }
+                    // 2 : 돈이 충분해서 살 수 있는 경우
+                    else if (player.Gold >= storeInventory[choice - 1].Price)
+                    {
+                        player.Gold -= storeInventory[choice - 1].Price;
+                        storeInventory[choice - 1].Purchase();
+                        inventory.Add(storeInventory[choice - 1]);
+                        PurchaseMenu();
+                    }
+                    // 3 : 돈이 모자라는 경우
+                    else
+                    {
+                        PurchaseMenu("Gold가 부족합니다.");
+                    }
                     break;
             }
         }
