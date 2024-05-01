@@ -123,40 +123,21 @@ public class Item
 }
 
 
-internal class Postion
+internal class Potion
 {
     public string Name;
     public string Desc;
     public int Hp;
     public int Price;
-    public bool IsEquipped;
-    public bool IsPurchased;
+    public int Count;
 
-    public Postion(string name, string description, int hp, int price, bool isEquipped = false, bool isPurchased = false)
+    public Potion(string name, string description, int hp, int price, bool isEquipped = false, bool isPurchased = false)
     {
         Name = name;
         Desc = description;
         Hp = hp;
         Price = price;
-        IsEquipped = isEquipped;
-        IsPurchased = isPurchased;
+        Count = 3;
     }
-
-    internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
-    {
-        Console.Write("- ");
-        if (withNumber)
-        {
-            Console.Write("{0} ", idx);
-        }
-        if (IsEquipped)
-        {
-
-        }
-        if (Hp != 0) Console.Write($"체  력 {(Hp >= 0 ? "+" : "")}{Hp} ");
-
-        Console.Write(" | ");
-
-        Console.WriteLine(Desc);
-    }
+  
 }
