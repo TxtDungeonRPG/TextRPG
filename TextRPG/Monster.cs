@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-internal class Monster
+public class Monster
 {
     public string Name; //이름
     public float Hp; //체력

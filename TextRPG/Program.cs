@@ -1,11 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Xml.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace TextRPG
+﻿namespace TextRPG
 {
     public class GameManager
     {
@@ -130,7 +123,7 @@ namespace TextRPG
             int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
             switch (choice)
             {
-                case 0: 
+                case 0:
                     MainMenu();
                     break;
                 case 1:
@@ -170,13 +163,13 @@ namespace TextRPG
 
         private void StatusMenu()
         {
-            
+
             Console.Clear();
 
             Console.WriteLine("■ 상태보기 ■");
             Console.WriteLine("캐릭터의 정보가 표기됩니다.");
             Console.WriteLine("");
-            Console.WriteLine("Lv. {0}",player.Level);
+            Console.WriteLine("Lv. {0}", player.Level);
             Console.WriteLine("{0} ({1})", player.Name, player.Class);
 
             // TODO : 능력치 강화분을 표현하도록 변경
@@ -191,7 +184,7 @@ namespace TextRPG
             if (bonusDef > 0) Console.WriteLine($" (+{bonusDef})"); else Console.WriteLine("");
             Console.Write("체 력 : " + (player.Hp + bonusHp).ToString());
             if (bonusHp > 0) Console.WriteLine($" (+{bonusHp})"); else Console.WriteLine("");
-            Console.WriteLine("Gold : {0} G",player.Gold);
+            Console.WriteLine("Gold : {0} G", player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("");
@@ -211,6 +204,8 @@ namespace TextRPG
         {
             if (!isMonsterSpawned)
             {
+                //전투 시작당시의 체력. Victory(), Lose()에서 사용하기 위한 값.
+                startHp = player.Hp; 
                 //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
                 Random random = new Random();
                 int count = random.Next(1, 5); // 몬스터 마리수
@@ -239,7 +234,6 @@ namespace TextRPG
                 }
                 isMonsterSpawned = true;
             }
-            startHp = player.Hp; //전투 시작당시의 체력. Victory(), Lose()에서 사용하기 위한 값.
             Console.Clear();
 
             Console.WriteLine("■ Battle!! ■");
@@ -283,30 +277,24 @@ namespace TextRPG
 
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            for(int i = 0; i < monsterlist.Count; i++) 
+            for (int i = 0; i < monsterlist.Count; i++)
             {
                 monsterlist[i].PrintMonsterDescription(true, i + 1);
-            }        
+            }
             Console.WriteLine("");
             player.PlayerInfo();
             Console.WriteLine("");
             Console.WriteLine("0. 취소");
             Console.WriteLine("");
-            do
-            {
-                choice = ConsoleUtil.MenuChoice(0, monsterlist.Count, "대상을 선택해주세요.");
-                if (choice != 0 && monsterlist[choice - 1].IsDead)
-                {
-                    Console.WriteLine("이미 죽은 몬스터입니다");
-                }
-            }
-            while (choice != 0 && monsterlist[choice - 1].IsDead);
 
-            if(choice == 0)
+            IsCheckDeadMonster(out choice);
+
+            if (choice == 0)
             {
                 StartBattleMenu();
 
-            }else
+            }
+            else
             {
                 Attack(choice);
             }
@@ -316,11 +304,11 @@ namespace TextRPG
         private void Attack(int choiceEnemy)
         {
             Random random = new Random();
-            int damage = (int)player.AtkPlayer+random.Next((int)Math.Floor(player.AtkPlayer*(-0.1)), (int)Math.Ceiling(player.AtkPlayer*0.1));
+            int damage = (int)player.AtkPlayer + random.Next((int)Math.Floor(player.AtkPlayer * (-0.1)), (int)Math.Ceiling(player.AtkPlayer * 0.1));
             Console.Clear();
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
-            Console.WriteLine("{0}의 공격!",player.Name);
+            Console.WriteLine("{0}의 공격!", player.Name);
             int attackChance = random.Next(100);
             if (attackChance < 90)
             {
@@ -333,7 +321,7 @@ namespace TextRPG
                 }
                 else
                 {
-                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]", 
+                    Console.WriteLine("Lv.{0} {1} 을(를) 맞췄습니다. [데미지 : {2}]",
                                         monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name, damage);
                 }
                 Console.WriteLine("");
@@ -355,7 +343,7 @@ namespace TextRPG
             {
                 Console.WriteLine("Lv.{0} {1} 을(를) 공격했지만 아무일도 일어나지 않았습니다.", monsterlist[choiceEnemy - 1].Level, monsterlist[choiceEnemy - 1].Name);
             }
-            
+
 
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
@@ -393,19 +381,18 @@ namespace TextRPG
             Console.WriteLine("");
             player.PlayerInfo();
             Console.WriteLine("");
-            Console.WriteLine("");
 
-            for(int i = 0; i < player.Skills.Length; i++) 
+            for (int i = 0; i < player.Skills.Length; i++)
             {
                 Skill skill = player.Skills[i];
                 // 대상이 한명인 경우
-                if (skill.DamageAmount == 1) 
+                if (skill.DamageAmount == 1)
                 {
-                     Console.WriteLine($"{i+1}. {skill.Name} - MP {skill.ExpendMp}");
-                     Console.WriteLine($"   공격력 * {skill.DamageScale} 로 하나의 적을 공격합니다.");
+                    Console.WriteLine($"{i + 1}. {skill.Name} - MP {skill.ExpendMp}");
+                    Console.WriteLine($"   공격력 * {skill.DamageScale} 로 하나의 적을 공격합니다.");
                 }
                 // 대상이 여러명인 경우
-                else if (skill.DamageAmount >= 2) 
+                else if (skill.DamageAmount >= 2)
                 {
                     Console.WriteLine($"{i + 1}. {skill.Name} - MP {skill.ExpendMp}");
                     Console.WriteLine($"   공격력 * {skill.DamageScale} 로 {skill.DamageAmount}명의 적을 랜덤으로 공격합니다.");
@@ -416,24 +403,33 @@ namespace TextRPG
 
             int choice = ConsoleUtil.MenuChoice(0, player.Skills.Length);
 
-            if(choice == 0)
+            if (choice == 0)
             {
                 StartBattleMenu();
             }
             else
             {
-                // 단일 스킬을 선택한 경우 몬스터 선택메뉴 이동
-                if (player.Skills[choice].DamageAmount == 1)
+                // 스킬을 사용할 MP가 부족한 경우 
+                if(player.Mp < player.Skills[choice - 1].ExpendMp)
                 {
-                    SkillMenu(choice); 
+                    Console.Clear();
+                    Console.WriteLine("해당스킬을 사용할 MP가 부족합니다.");
+                    Thread.Sleep(1000);
+                    SkillMenu();
+                }
+
+                // 단일 스킬을 선택한 경우 몬스터 선택메뉴 이동
+                if (player.Skills[choice - 1].DamageAmount == 1)
+                {
+                    SkillMenu(choice);
                 }
                 // 랜덤 스킬을 선택한 경우 스킬사용
                 else
                 {
                     Skill(choice);
                 }
-                
-               
+
+
             }
         }
 
@@ -472,18 +468,39 @@ namespace TextRPG
 
         private void Skill(int skillIndex, int monsterIndex = 0)
         {
-            Skill useSkill = player.Skills[skillIndex];
+            Skill useSkill = player.Skills[skillIndex - 1];
             float skillDamage = player.AtkPlayer * useSkill.DamageScale;
+            // MP 소모
+            player.Mp -= useSkill.ExpendMp;
 
             Console.Clear();
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
             Console.WriteLine($"{player.Name}의 {useSkill.Name}!");
-         
+
             // 한마리 공격하는 경우 
             if (useSkill.DamageAmount == 1)
             {
-                Console.WriteLine($"Lv.{monsterlist[monsterIndex].Level}  {monsterlist[monsterIndex].Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+                Monster selectedMonster = monsterlist[monsterIndex - 1];
+
+                Console.WriteLine($"Lv.{selectedMonster.Level}  {selectedMonster.Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{selectedMonster.Level}  {selectedMonster.Name}");
+
+                if (selectedMonster.Hp - skillDamage <= 0)
+                {
+                    // 몬스터가 죽은 경우
+                    Console.WriteLine($"HP {selectedMonster.Hp} -> Dead");
+                    selectedMonster.IsDead = true;
+                    selectedMonster.Hp = 0;
+                    // 경험치
+                    player.Exp += (int)selectedMonster.Level;
+                }
+                else
+                {
+                    Console.WriteLine($"HP {selectedMonster.Hp} -> {selectedMonster.Hp - skillDamage}");
+                    selectedMonster.Hp -= skillDamage;
+                }
 
             }
             // 여러 마리 공격하는 경우
@@ -491,37 +508,41 @@ namespace TextRPG
             {
                 Random random = new Random();
 
-                // 랜덤으로 공격할 몬스터의 정한다.
-                List<int> selectedIndexList = GetRandomElements(monsterlist.Count, useSkill.DamageAmount);
+                // 랜덤으로 공격할 몬스터의 정한다. 
+                List<int> selectedIndexList = GetRandomMonsterIdx(monsterlist, useSkill.DamageAmount);
 
+
+               
                 // 랜덤으로 몬스터를 맞추고 표시
-                for (int i = 0; i < selectedIndexList.Count; i++)
+                foreach (int index in selectedIndexList) 
                 {
-                    Console.WriteLine($"Lv.{monsterlist[i].Level}  {monsterlist[i].Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+                    Console.WriteLine($"Lv.{monsterlist[index].Level}  {monsterlist[index].Name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+
                 }
                 Console.WriteLine("");
-                for (int i = 0; i < selectedIndexList.Count; i++)
+                foreach (int index in selectedIndexList)
                 {
-                    Console.WriteLine($"Lv.{monsterlist[i].Level}  {monsterlist[i].Name}");
+                    Console.WriteLine($"Lv.{monsterlist[index].Level}  {monsterlist[index].Name}");
 
-                    if(monsterlist[i].Hp - skillDamage <= 0)
+                    if (monsterlist[index].Hp - skillDamage <= 0)
                     {
                         // 몬스터가 죽은 경우
 
-                        Console.WriteLine($"HP {monsterlist[i].Hp} -> Dead");
-                        monsterlist[i].IsDead = true;
-                        monsterlist[i].Hp = 0;
+                        Console.WriteLine($"HP {monsterlist[index].Hp} -> Dead");
+                        monsterlist[index].IsDead = true;
+                        monsterlist[index].Hp = 0;
                         // 경험치
-                        player.Exp += (int)monsterlist[i].Level; 
+                        player.Exp += (int)monsterlist[index].Level;
                     }
                     else
                     {
-                        Console.WriteLine($"HP {monsterlist[i].Hp} -> {monsterlist[i].Hp - skillDamage}");
-                        monsterlist[i].Hp -= skillDamage;
+                        Console.WriteLine($"HP {monsterlist[index].Hp} -> {monsterlist[index].Hp - skillDamage}");
+                        monsterlist[index].Hp -= skillDamage;
                     }
                 }
+               
             }
-
+            Console.WriteLine("");
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
 
@@ -548,7 +569,7 @@ namespace TextRPG
 
         private void EnemyPhase()
         {
-            
+
             Monster? monster = null;
 
             for (int i = 0; i < monsterlist.Count; i++)
@@ -561,8 +582,8 @@ namespace TextRPG
                         monster = monsterlist[i];
                         monster.IsAttack = true;
                         break;
-                    }                 
-                }             
+                    }
+                }
             }
 
 
@@ -584,9 +605,9 @@ namespace TextRPG
             }
             else
             {
-                // 공격할 몬스터가 없는 경우 AttackMenu() 이동, 공격 여부 초기화
+                // 공격할 몬스터가 없는 경우 StartBattleMenu() 이동, 공격 여부 초기화
                 monsterlist.ForEach(x => x.IsAttack = false);
-                AttackMenu();
+                StartBattleMenu();
             }
 
             Console.WriteLine("");
@@ -594,12 +615,12 @@ namespace TextRPG
             Console.WriteLine("");
 
             int choice = ConsoleUtil.MenuChoice(0, 0);
-            
+
             switch (choice)
             {
                 case 0:
                     //캐릭터 체력이 0 이하가 된경우 패배
-                    if(player.Hp <= 0)
+                    if (player.Hp <= 0)
                     {
                         Lose();
                     }
@@ -629,9 +650,10 @@ namespace TextRPG
             Console.WriteLine("");
 
             //레벨업 확인
-            if (player.LevelUpcheck()){ 
+            if (player.LevelUpcheck()) 
+            {
                 Console.SetCursorPosition(0, 6);
-                Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level-1, player.Name, player.Level);
+                Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level - 1, player.Name, player.Level);
                 Console.SetCursorPosition(0, 11);
             }
 
@@ -641,7 +663,7 @@ namespace TextRPG
             {
                 case 0:
                     monsterlist.Clear();
-                    isMonsterSpawned=false;
+                    isMonsterSpawned = false;
                     MainMenu();
                     break;
             }
@@ -668,7 +690,7 @@ namespace TextRPG
             {
                 case 0:
                     monsterlist.Clear();
-                    isMonsterSpawned=false;
+                    isMonsterSpawned = false;
                     MainMenu();
                     break;
             }
@@ -680,25 +702,38 @@ namespace TextRPG
 
         }
 
-        // 0 부터 입력된 숫자중 n 개를 중복없이 랜덤으로 선택하는 기능
-        public List<int> GetRandomElements(int num, int n)
+        // 랜덤으로 몬스터를 선택
+        public List<int> GetRandomMonsterIdx(List<Monster> monsterList, int n)
         {
             Random rand = new Random();
+            List<int> aliveMonsterIndexList = new List<int>();
+            List<int> randomIndexList = new List<int>();
 
-            // 리스트에서 m개의 요소를 랜덤으로 선택하여 새 리스트에 추가
-            List<int> randomNumbers = new List<int>();
-
-            while (randomNumbers.Count < n)
+            // 죽은 몬스터의 인덱스를 제외한 유효한 인덱스 목록 생성
+            for (int i = 0; i < monsterList.Count; i++)
             {
-                int randomIndex = rand.Next(0, num);
-                // 중복되지않는 index를 담고 있지않다면 담는다.
-                if (!randomNumbers.Contains(randomIndex))
+                if (!monsterList[i].IsDead)
                 {
-                    randomNumbers.Add(randomIndex);
+                    aliveMonsterIndexList.Add(i);
                 }
             }
 
-            return randomNumbers;
+            // 리스트의 크기가 선택할 요소의 개수보다 작은 경우 리스트의 크기만큼 선택
+            if (n > aliveMonsterIndexList.Count) n = aliveMonsterIndexList.Count;
+
+            // 중복되지 않는 인덱스 선택
+            while (randomIndexList.Count < n)
+            {
+                int randomIndex = aliveMonsterIndexList[rand.Next(0, aliveMonsterIndexList.Count)];
+                // 이미 선택된 인덱스인지 확인, 죽은 몬스터 인지 확인
+                if (!randomIndexList.Contains(randomIndex))
+                {
+                    randomIndexList.Add(randomIndex);
+                }
+
+            }
+
+            return randomIndexList;
         }
 
 
@@ -721,7 +756,7 @@ namespace TextRPG
 
 
     class Program
-   
+
     {
         static void Main(string[] args)
         {
