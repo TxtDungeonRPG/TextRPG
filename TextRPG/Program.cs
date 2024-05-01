@@ -18,6 +18,10 @@ namespace TextRPG
         private List<Item> storeInventory;
         private List<Quest> QuestList;
         private Potion potion;
+
+        private int bonusAtk;
+        private int bonusDef;
+        private int bonusHp;
         public GameManager()
         {
             InitializeGame();
@@ -288,10 +292,10 @@ namespace TextRPG
             Console.WriteLine("{0} ({1})", player.Name, player.Class);
 
             // TODO : 능력치 강화분을 표현하도록 변경
-
-            int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
-            int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
-            int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
+            IncreaseItemStat();
+            //int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
+            //int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
+            //int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
 
             Console.Write("공격력 : " + (player.AtkPlayer + bonusAtk).ToString());
             if (bonusAtk > 0) Console.WriteLine($" (+{bonusAtk})"); else Console.WriteLine("");
@@ -314,6 +318,13 @@ namespace TextRPG
                     break;
             }
             StatusMenu();
+        }
+
+        private void IncreaseItemStat()
+        {
+            bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
+            bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
+            bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
         }
 
         private void PotionMenu()
@@ -465,8 +476,10 @@ namespace TextRPG
 
         private void Attack(int choiceEnemy)
         {
+            IncreaseItemStat();
             Random random = new Random();
-            int damage = (int)player.AtkPlayer + random.Next((int)Math.Floor(player.AtkPlayer * (-0.1)), (int)Math.Ceiling(player.AtkPlayer * 0.1));
+            float AtkSum = player.AtkPlayer + bonusAtk;
+            int damage = (int)AtkSum + random.Next((int)Math.Floor(AtkSum * (-0.1)), (int)Math.Ceiling(AtkSum * 0.1));
             Console.Clear();
             Console.WriteLine("■ Battle!! ■");
             Console.WriteLine("");
@@ -634,8 +647,9 @@ namespace TextRPG
 
         private void Skill(int skillIndex, int monsterIndex = 0)
         {
+            IncreaseItemStat();
             Skill useSkill = player.Skills[skillIndex - 1];
-            float skillDamage = player.AtkPlayer * useSkill.DamageScale;
+            float skillDamage = (player.AtkPlayer + bonusAtk) * useSkill.DamageScale;
             // MP 소모
             player.Mp -= useSkill.ExpendMp;
 
