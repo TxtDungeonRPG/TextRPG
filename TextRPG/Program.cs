@@ -201,6 +201,7 @@ namespace TextRPG
             if (bonusDef > 0) Console.WriteLine($" (+{bonusDef})"); else Console.WriteLine("");
             Console.Write("체 력 : " + (player.Hp + bonusHp).ToString());
             if (bonusHp > 0) Console.WriteLine($" (+{bonusHp})"); else Console.WriteLine("");
+            Console.WriteLine("마 나 : " + (player.Mp).ToString());
             Console.WriteLine("Gold : {0} G", player.Gold);
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
