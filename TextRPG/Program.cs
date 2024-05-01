@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -13,9 +14,7 @@ namespace TextRPG
         private bool isMonsterSpawned = false;
         private int startHp;
         private List<Item> inventory;
-
-
-
+        private List<Quest> QuestList;
         public GameManager()
         {
             InitializeGame();
@@ -27,11 +26,14 @@ namespace TextRPG
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
-
             //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
             inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
             inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
             inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+            QuestList = new List<Quest>();
+            QuestList.Add(new Quest1());
+            QuestList.Add(new Quest2());
+            QuestList.Add(new Quest3());
         }
 
         private void PlayerCreate()
@@ -344,6 +346,10 @@ namespace TextRPG
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
                     player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
+
+                    QuestList[0].Changenum(1);
+
+
                 }
                 else
                 {
@@ -513,8 +519,100 @@ namespace TextRPG
         }
         private void StartQuestMenu()
         {
+            int count = 0;
+
+            foreach(Quest exquest in QuestList)
+            {
+                if (!exquest.IsDone)
+                {
+                    exquest.QuestProgress(inventory,player);
+                    exquest.QuestClearCheck();
+                }
+            }
 
 
+            Console.Clear();
+            Console.WriteLine("■ Quest ■\n");
+            foreach(Quest exquest in QuestList)
+            {
+                if (!exquest.QuestOut)
+                {
+                    count++;
+                    if (exquest.IsDone)
+                    {
+                        Console.WriteLine($"{count}. {exquest.QuestTitle} (완료!!)");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{count}. {exquest.QuestTitle}");
+                    }
+                }
+
+            }
+
+            int choice = ConsoleUtil.MenuChoice(0, count, "\n0. 돌아가기\n원하시는 퀘스트를 입력해주세요.");
+
+            for (int i = 0; i < choice; i++)//이미 달성한 퀘스트는 표기되지 않아 퀘스트리스트의 숫자와 맞지 않음, 이 반복문을 통해 그 부분을 줄여줌
+            {
+                if (QuestList[i].QuestOut)//반복문을 퀘스트 상위(0번째)부터 고른 숫자까지 진행하며, 이미 달성한 퀘스트가 있는경우 선택한 숫자 증가
+                {
+                    choice++;
+                }
+            }
+
+            if (choice == 0)
+            {
+                MainMenu();
+            }
+            else
+            {
+                QuestDescription(choice);
+            }
+
+        }
+
+        private void QuestDescription(int questChoice)
+        {
+
+            Console.Clear();
+            Console.WriteLine("■ Quest ■\n");
+            Console.WriteLine($"{QuestList[questChoice-1].QuestTitle}\n");
+            Console.WriteLine($"{QuestList[questChoice - 1].QuestScript}\n");
+            Console.WriteLine($" - {QuestList[questChoice - 1].QuestWhatToDo} ({QuestList[questChoice - 1].QuestTracker}/{QuestList[questChoice - 1].QuestTarget})\n");
+            Console.WriteLine($" -  보상  - \n");
+            Console.WriteLine($"{QuestList[questChoice - 1].Reward}\n");
+
+            //퀘스트의 완료 여부에 따라 선택지 변경
+            if (QuestList[questChoice-1].IsDone) 
+            {
+                Console.WriteLine("1. 보상 받기");
+                Console.WriteLine("2. 돌아가기");
+            }
+            else
+            {
+                Console.WriteLine("1. 수락");
+                Console.WriteLine("2. 거절");
+            }
+
+            int choice = ConsoleUtil.MenuChoice(1, 2, "\n원하시는 행동을 입력해주세요.");//숫자 수정하기
+
+            switch (choice)
+            {
+                case 1:
+                    if (QuestList[questChoice - 1].IsDone)//보상 획득
+                    {
+                        QuestList[questChoice - 1].QuestDone(inventory,player);
+                    }
+                    else
+                    {
+                        Console.WriteLine("퀘스트를 수락했습니다\n엔터를 눌러 계속...");
+                        Console.ReadLine();
+                    }
+                        break;
+                case 2:
+                    StartQuestMenu();
+                    break;
+            }
         }
 
         private void DropItem()
