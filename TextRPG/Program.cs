@@ -23,6 +23,7 @@ namespace TextRPG
         private int bonusHp;
 
         private List<Potion> potionList;
+        private Stage currentStage; //현재 스테이지 변수 추가
         public GameManager()
         {
             InitializeGame();
@@ -35,7 +36,7 @@ namespace TextRPG
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
             //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
-            //inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
+             //inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
             //inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
             //inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
             //상점 아이템 목록
@@ -51,6 +52,8 @@ namespace TextRPG
             potionList = new List<Potion>();
             potionList.Add(new Potion("회복 포션", "체력을 회복시킵니다.", 30, 0, 100));
             potionList.Add(new Potion("마나 포션", "마나를 회복시킵니다.", 0, 30, 100));
+             //현재 스테이지 초기화
+            currentStage = new Stage(1);
         }
 
         private void PlayerCreate()
@@ -108,8 +111,11 @@ namespace TextRPG
             Console.WriteLine("이제 전투를 시작할 수 있습니다.");
             Console.WriteLine("");
 
+            //현재 진행 중인 스테이지 추가
+            Console.WriteLine($"현재 진행 중인 스테이지: {currentStage.CurrentFloor}층");
+            Console.WriteLine("");
             Console.WriteLine("1. 상태보기");
-            Console.WriteLine("2. 전투시작");
+            Console.WriteLine($"2. 전투시작 (현재진행: {currentStage.CurrentFloor}층)");
             Console.WriteLine("3. 인벤토리");
             Console.WriteLine("4. 퀘스트");
             Console.WriteLine("5. 회복 아이템");
