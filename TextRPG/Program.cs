@@ -1,4 +1,12 @@
-﻿namespace TextRPG
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using System.Xml.Serialization;
+
+namespace TextRPG
+
 {
     public class GameManager
     {
@@ -8,6 +16,7 @@
         private int startHp;
         private List<Item> inventory;
         private List<Quest> QuestList;
+        private Potion potion;
         public GameManager()
         {
             InitializeGame();
@@ -27,6 +36,7 @@
             QuestList.Add(new Quest1());
             QuestList.Add(new Quest2());
             QuestList.Add(new Quest3());
+            potion = new Potion("회복 포션", "체력을 회복시킵니다.", 30, 100);
         }
 
         private void PlayerCreate()
@@ -83,8 +93,9 @@
             Console.WriteLine("2. 전투시작");
             Console.WriteLine("3. 인벤토리");
             Console.WriteLine("4. 퀘스트");
+            Console.WriteLine("5. 회복 아이템");
             Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(1, 4, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(1, 5, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
@@ -99,6 +110,9 @@
                     break;
                 case 4:
                     StartQuestMenu();
+                    break;
+                case 5:
+                    PotionMenu();
                     break;
 
             }
@@ -201,6 +215,52 @@
                     break;
             }
             StatusMenu();
+        }
+
+        private void PotionMenu()
+        {
+            Console.Clear();
+
+            Console.WriteLine("■ 회복 ■");
+            Console.WriteLine("포션을 사용하면 체력을 {0} 회복할 수 있습니다. (남은 포션: {1})", potion.Hp, potion.Count);
+            Console.WriteLine("");
+            Console.WriteLine("1. 사용하기");
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine("");
+
+            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            switch (choice)
+            {
+                case 1:
+                    if (potion.Count > 0)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("");
+                        Console.WriteLine("회복을 완료했습니다.");
+                        player.Hp += potion.Hp;
+                        if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
+                        potion.Count--;
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 다음");
+                        Console.WriteLine("");
+                        ConsoleUtil.MenuChoice(0, 0);
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.WriteLine("");
+                        Console.WriteLine("포션이 부족합니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 다음");
+                        Console.WriteLine("");
+                        ConsoleUtil.MenuChoice(0, 0);
+                    }
+                    break;
+                case 0:
+                    MainMenu();
+                    break;
+            }
+            PotionMenu();
         }
 
         private void StartBattleMenu()
@@ -658,9 +718,7 @@
             Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
             Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
             Console.WriteLine("");
-            Console.WriteLine("0. 다음");
-            Console.WriteLine("");
-
+            
             //레벨업 확인
             if (player.LevelUpcheck()) 
             {
@@ -669,6 +727,10 @@
                 Console.SetCursorPosition(0, 11);
             }
 
+            //획득 아이템
+            DropItem();
+            Console.WriteLine("0. 다음");
+            Console.WriteLine("");
             int choice = ConsoleUtil.MenuChoice(0, 0);
 
             switch (choice)
@@ -852,6 +914,38 @@
                 }
             }
             while (choice != 0 && monsterlist[choice - 1].IsDead);
+        }
+
+        private void DropItem()
+        {
+            // 몬스터 별 잡을을 때 보상 추가
+            // 경험치, 골드, 아이템 등
+            int dropGold = 0, dropPotion = 0, dropSword = 0;
+            Random random = new Random();
+            foreach (var item in monsterlist) {
+                int reward = random.Next(0, 100);
+                if (reward >= 0 && reward < 50) 
+                {
+                    dropGold += 500;
+                }
+                else if (reward >= 50 && reward < 75)
+                {
+                    dropPotion++;
+                }
+                else
+                {
+                    dropSword++;
+                }
+            }
+            Console.WriteLine("[획득 아이템]");
+            Console.WriteLine("");
+            if (dropGold>0) Console.WriteLine("{0} Gold", dropGold);
+            if(dropPotion>0) Console.WriteLine("포션 - {0}", dropPotion);
+            if(dropSword>0) Console.WriteLine("낡은검 - {0}", dropSword);
+            Console.WriteLine("");
+            player.Gold += dropGold;
+            potion.Count += dropPotion;
+            for(int i=0; i<dropSword; i++) inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
         }
     }
 
