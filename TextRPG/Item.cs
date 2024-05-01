@@ -130,14 +130,16 @@ internal class Potion
     public string Name;
     public string Desc;
     public int Hp;
+    public int Mp;
     public int Price;
     public int Count;
 
-    public Potion(string name, string description, int hp, int price, bool isEquipped = false, bool isPurchased = false)
+    public Potion(string name, string description, int hp, int mp, int price, bool isEquipped = false, bool isPurchased = false)
     {
         Name = name;
         Desc = description;
         Hp = hp;
+        Mp = mp;
         Price = price;
         Count = 3;
     }

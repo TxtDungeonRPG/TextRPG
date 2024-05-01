@@ -17,7 +17,9 @@ namespace TextRPG
         private List<Item> inventory;
         private List<Item> storeInventory;
         private List<Quest> QuestList;
-        private Potion potion;
+        //private Potion hpPotion;
+        //private Potion mpPotion;
+        private List<Potion> potionList;
         public GameManager()
         {
             InitializeGame();
@@ -43,7 +45,9 @@ namespace TextRPG
             QuestList.Add(new Quest1());
             QuestList.Add(new Quest2());
             QuestList.Add(new Quest3());
-            potion = new Potion("회복 포션", "체력을 회복시킵니다.", 30, 100);
+            potionList = new List<Potion>();
+            potionList.Add(new Potion("회복 포션", "체력을 회복시킵니다.", 30, 0, 100));
+            potionList.Add(new Potion("마나 포션", "마나를 회복시킵니다.", 0, 30, 100));
         }
 
         private void PlayerCreate()
@@ -321,24 +325,36 @@ namespace TextRPG
             Console.Clear();
 
             Console.WriteLine("■ 회복 ■");
-            Console.WriteLine("포션을 사용하면 체력을 {0} 회복할 수 있습니다. (남은 포션: {1})", potion.Hp, potion.Count);
+            Console.WriteLine("Hp포션을 사용하면 체력을 {0} 회복할 수 있습니다. (남은 포션: {1})", potionList[0].Hp, potionList[0].Count);
+            Console.WriteLine("Mp포션을 사용하면 마나를 {0} 회복할 수 있습니다. (남은 포션: {1})", potionList[1].Mp, potionList[1].Count);
+
             Console.WriteLine("");
-            Console.WriteLine("1. 사용하기");
+            Console.WriteLine("1. Hp포션 사용하기");
+            Console.WriteLine("2. Mp포션 사용하기");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("");
 
-            int choice = ConsoleUtil.MenuChoice(0, 1, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(0, 2, "원하시는 행동을 입력해주세요.");
             switch (choice)
             {
                 case 1:
-                    if (potion.Count > 0)
+                case 2:
+                    if (potionList[choice-1].Count > 0)
                     {
                         Console.Clear();
                         Console.WriteLine("");
                         Console.WriteLine("회복을 완료했습니다.");
-                        player.Hp += potion.Hp;
-                        if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
-                        potion.Count--;
+                        if(choice == 1)
+                        {
+                            player.Hp += potionList[choice - 1].Hp;
+                            if (player.Hp > player.MaxHp) player.Hp = player.MaxHp;
+                        }
+                        else if(choice == 2)
+                        {
+                            player.Mp += potionList[choice - 1].Mp;
+                            if (player.Mp > player.MaxMp) player.Mp = player.MaxMp;
+                        }
+                        potionList[choice-1].Count--;
                         Console.WriteLine("");
                         Console.WriteLine("0. 다음");
                         Console.WriteLine("");
@@ -1043,7 +1059,7 @@ namespace TextRPG
             if(dropSword>0) Console.WriteLine("낡은검 - {0}", dropSword);
             Console.WriteLine("");
             player.Gold += dropGold;
-            potion.Count += dropPotion;
+            potionList[0].Count += dropPotion;
             for(int i=0; i<dropSword; i++) inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
         }
     }
