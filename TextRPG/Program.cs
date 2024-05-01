@@ -272,6 +272,10 @@ namespace TextRPG
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
                     player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
+                    if (QuestList[0].QuestTracker<=5)
+                    {
+                        QuestList[0].QuestTracker++;//몬스터 처치 퀘스트를 달성하지 못했을 때 카운터 상승
+                    }
                 }
                 else
                 {
@@ -467,10 +471,13 @@ namespace TextRPG
             Console.WriteLine("■ Quest ■\n");
             Console.WriteLine($"{QuestList[questChoice-1].QuestTitle}\n");
             Console.WriteLine($"{QuestList[questChoice - 1].QuestScript}\n");
-            Console.WriteLine($" - {QuestList[questChoice - 1].QuestWhatToDo}\n");
+            Console.WriteLine($" - {QuestList[questChoice - 1].QuestWhatToDo} ({QuestList[questChoice - 1].QuestTracker}/{QuestList[questChoice - 1].QuestTarget})\n");
             Console.WriteLine($" -  보상  - \n");
             //추후 보상 추가
-
+            if(QuestList[questChoice - 1].QuestTracker == QuestList[questChoice - 1].QuestTarget)
+            {
+                QuestList[questChoice - 1].IsDone = true;
+            }
             //퀘스트의 완료 여부에 따라 선택지 변경
             if (QuestList[questChoice-1].IsDone) 
             {
@@ -483,8 +490,20 @@ namespace TextRPG
                 Console.WriteLine("2. 거절");
             }
 
-            int choice = ConsoleUtil.MenuChoice(0, 2, "\n0. 돌아가기\n원하시는 행동을 입력해주세요.");//숫자 수정하기
+            int choice = ConsoleUtil.MenuChoice(1, 2, "\n원하시는 행동을 입력해주세요.");//숫자 수정하기
 
+            switch (choice)
+            {
+                case 1:
+                    if (QuestList[questChoice - 1].IsDone)
+                    {
+                        //보상 획득
+                    }
+                        break;
+                case 2:
+                    StartQuestMenu();
+                    break;
+            }
         }
 
     }
