@@ -13,6 +13,8 @@ namespace TextRPG
         private bool isMonsterSpawned = false;
         private int startHp;
         private List<Item> inventory;
+        private Stage currentStage; //현재 스테이지 변수 추가
+    
 
         public GameManager()
         {
@@ -30,6 +32,10 @@ namespace TextRPG
             inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
             inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
             inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+        
+            //현재 스테이지 초기화
+            currentStage = new Stage(1);
+        
         }
 
         private void PlayerCreate()
@@ -79,8 +85,11 @@ namespace TextRPG
             Console.WriteLine("이제 전투를 시작할 수 있습니다.");
             Console.WriteLine("");
 
+            //현재 진행 중인 스테이지 추가
+            Console.WriteLine($"현재 진행 중인 스테이지: {currentStage.CurrentFloor}층");
+            Console.WriteLine("");
             Console.WriteLine("1. 상태보기");
-            Console.WriteLine("2. 전투시작");
+            Console.WriteLine($"2. 전투시작 (현재진행: {currentStage.CurrentFloor}층)");
             Console.WriteLine("3. 인벤토리");
             Console.WriteLine("4. 퀘스트");
             Console.WriteLine("");
