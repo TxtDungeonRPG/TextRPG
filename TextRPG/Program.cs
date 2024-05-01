@@ -68,22 +68,27 @@ namespace TextRPG
             Console.WriteLine("■ 직업 선택 ■");
             Console.WriteLine("1. 전사\n2. 마법사\n3. 도적\n4. 해적");
 
-            Skill[] skills = [new Skill("알파 스트라이크", 10, 2, 1), new Skill("더블 스트라이크", 15, 1.5f, 2)];
+            Skill[] skills;
+            //skills = [new Skill("알파 스트라이크", 10, 2, 1), new Skill("더블 스트라이크", 15, 1.5f, 2)];
 
             int choice = ConsoleUtil.MenuChoice(0, 4, "원하시는 직업을 입력해주세요.");
 
             switch (choice)
             {
                 case 1:
+                    skills = [new Skill("알파 스트라이크", 10, 2, 1), new Skill("더블 스트라이크", 15, 1.5f, 2)];
                     player = new Player(1, playerName, "전사", 8, 7, 100, 30, 1500, skills);
                     break;
                 case 2:
+                    skills = [new Skill("에너지 볼트", 8, 2, 1), new Skill("매직클로", 20, 1.0f, 4)];
                     player = new Player(1, playerName, "마법사", 12, 3, 100, 80, 1500, skills);
                     break;
                 case 3:
+                    skills = [new Skill("비열한 한방", 15, 2.5f, 1), new Skill("연쇄 타격", 15, 1.5f, 3)];
                     player = new Player(1, playerName, "도적", 11, 4, 100, 50, 2000, skills);
                     break;
                 case 4:
+                    skills = [new Skill("파이어 불릿", 10, 2, 1), new Skill("한 발에 두 놈", 15, 1.5f, 2)];
                     player = new Player(1, playerName, "해적", 10, 5, 100, 50, 1700, skills);
                     break;
             }
