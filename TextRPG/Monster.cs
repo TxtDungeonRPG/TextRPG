@@ -46,7 +46,7 @@ public class Monster
         Console.ResetColor();
     }
 
-
+    
 
 
 
