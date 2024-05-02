@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace TextRPG
@@ -407,7 +408,8 @@ namespace TextRPG
                 startHp = player.Hp; 
                 //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
                 Random random = new Random();
-                int count = random.Next(1, 5); // 몬스터 마리수
+                int stageLevel = (int)(currentStage.CurrentFloor * 0.5); // 스테이지 레벨에 따른 난이도
+                int count = random.Next(1 + stageLevel, 5 + stageLevel); // 몬스터 마리수
                 int cnt; // 몬스터 종류
                 for (int i = 0; i < count; i++)
                 {
@@ -530,6 +532,14 @@ namespace TextRPG
                 if (monsterlist[choiceEnemy - 1].Hp - damage <= 0)
                 {
                     Console.WriteLine("HP {0} -> Dead", monsterlist[choiceEnemy - 1].Hp);
+                    // 공허충은 죽으면서 자폭한다!
+                    if (monsterlist[choiceEnemy - 1].Name == "공허충")
+                    {
+                        Console.WriteLine("   공허충이 자폭하며 {0} 에게 {1} 의 피해를 입힙니다!", player.Name, (int)monsterlist[choiceEnemy - 1].Attack/2);
+                        int decreasedHealth = (player.Hp - (int)monsterlist[choiceEnemy - 1].Attack/2) < 0 ? 0 : player.Hp - (int)monsterlist[choiceEnemy - 1].Attack/2;
+                        Console.WriteLine($"   Player HP {player.Hp} -> {decreasedHealth}");
+                        player.Hp = decreasedHealth;                        
+                    }
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
                     //player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
@@ -559,6 +569,11 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    //캐릭터 체력이 0 이하가 된경우 패배
+                    if (player.Hp <= 0)
+                    {
+                        Lose();
+                    }
                     // 몬스터가 모두 죽은경우 승리
                     foreach (var monster in monsterlist)
                     {
@@ -697,6 +712,14 @@ namespace TextRPG
                 {
                     // 몬스터가 죽은 경우
                     Console.WriteLine($"HP {selectedMonster.Hp} -> Dead");
+                    // 공허충은 죽으면서 자폭한다!
+                    if (selectedMonster.Name == "공허충")
+                    {
+                        Console.WriteLine("   공허충이 자폭하며 {0} 에게 {1} 의 피해를 입힙니다!", player.Name, (int)selectedMonster.Attack / 2);
+                        int decreasedHealth = (player.Hp - (int)selectedMonster.Attack / 2) < 0 ? 0 : player.Hp - (int)selectedMonster.Attack / 2;
+                        Console.WriteLine($"   Player HP {player.Hp} -> {decreasedHealth}");
+                        player.Hp = decreasedHealth;
+                    }
                     selectedMonster.IsDead = true;
                     selectedMonster.Hp = 0;
                     // 경험치
@@ -737,6 +760,15 @@ namespace TextRPG
                         // 몬스터가 죽은 경우
 
                         Console.WriteLine($"HP {monsterlist[index].Hp} -> Dead");
+                        // 공허충은 죽으면서 자폭한다!
+                        if (monsterlist[index].Name == "공허충")
+                        {
+                            Console.WriteLine("   공허충이 자폭하며 {0} 에게 {1} 의 피해를 입힙니다!", player.Name, (int)monsterlist[index].Attack / 2);
+                            int decreasedHealth = (player.Hp - (int)monsterlist[index].Attack / 2) < 0 ? 0 : player.Hp - (int)monsterlist[index].Attack / 2;
+                            Console.WriteLine($"   Player HP {player.Hp} -> {decreasedHealth}");
+                            player.Hp = decreasedHealth;
+                        }
+
                         monsterlist[index].IsDead = true;
                         monsterlist[index].Hp = 0;
                         // 경험치
@@ -762,6 +794,11 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    //캐릭터 체력이 0 이하가 된경우 패배
+                    if (player.Hp <= 0)
+                    {
+                        Lose();
+                    }
                     // 몬스터가 모두 죽은경우 승리
                     foreach (var monster in monsterlist)
                     {
@@ -801,20 +838,22 @@ namespace TextRPG
             // 공격할 몬스터가 있는 경우
             if (monster != null)
             {
-                int decreasedHealth = (player.Hp - (int)monster.Attack) < 0 ? 0 : player.Hp - (int)monster.Attack;
+                int monsterDamage = (int)monster.Attack - (int)((player.DfdPlayer + bonusDef) * 0.3);
+                int decreasedHealth = (player.Hp - (int)monsterDamage) < 0 ? 0 : player.Hp - (int)monsterDamage;
 
                 Console.Clear();
 
                 Console.WriteLine("■ Battle!! ■");
+                Console.WriteLine(monsterDamage);
                 Console.WriteLine("");
 
                 Console.WriteLine($"Lv.{monster.Level} {monster.Name} 의 공격!");
-                Console.WriteLine($"{player.Name} 을(를) 맞췄습니다.  [데미지 : {monster.Attack}]");
+                Console.WriteLine($"{player.Name} 을(를) 맞췄습니다.  [데미지 : {monsterDamage}]");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {player.Hp} -> {decreasedHealth}");
 
-                player.Hp -= (int)monster.Attack;
+                player.Hp -= (int)monsterDamage;
             }
             else
             {
@@ -882,6 +921,7 @@ namespace TextRPG
                 case 0:
                     monsterlist.Clear();
                     isMonsterSpawned = false;
+                    currentStage.CurrentFloor++;
                     MainMenu();
                     break;
             }
@@ -1064,17 +1104,21 @@ namespace TextRPG
         {
             // 몬스터 별 잡을을 때 보상 추가
             // 경험치, 골드, 아이템 등
-            int dropGold = 0, dropPotion = 0, dropSword = 0;
+            int dropGold = 0, dropHpPotion = 0, dropMpPotion = 0, dropSword = 0; 
             Random random = new Random();
             foreach (var item in monsterlist) {
                 int reward = random.Next(0, 100);
-                if (reward >= 0 && reward < 50) 
+                if (reward >= 0 && reward < 25) 
                 {
                     dropGold += 500;
                 }
+                else if (reward >= 25 && reward < 50)
+                {
+                    dropHpPotion++;
+                }
                 else if (reward >= 50 && reward < 75)
                 {
-                    dropPotion++;
+                    dropMpPotion++;
                 }
                 else
                 {
@@ -1084,12 +1128,14 @@ namespace TextRPG
             Console.WriteLine("[획득 아이템]");
             Console.WriteLine("");
             if (dropGold>0) Console.WriteLine("{0} Gold", dropGold);
-            if(dropPotion>0) Console.WriteLine("포션 - {0}", dropPotion);
-            if(dropSword>0) Console.WriteLine("낡은검 - {0}", dropSword);
+            if(dropHpPotion>0) Console.WriteLine("Hp포션 - {0}", dropHpPotion);
+            if(dropMpPotion>0) Console.WriteLine("Mp포션 - {0}", dropMpPotion);
+            if (dropSword>0) Console.WriteLine("녹슬은 검 - {0}", dropSword);
             Console.WriteLine("");
             player.Gold += dropGold;
-            potionList[0].Count += dropPotion;
-            for(int i=0; i<dropSword; i++) inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
+            potionList[0].Count += dropHpPotion;
+            potionList[1].Count += dropMpPotion;
+            for (int i=0; i<dropSword; i++) inventory.Add(new Item("녹슬은 검", "녹슬은 검", ItemType.WEAPON, 1, 0, 0, 500));
         }
     }
 
