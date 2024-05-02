@@ -793,6 +793,11 @@ namespace TextRPG
             switch (choice)
             {
                 case 0:
+                    //캐릭터 체력이 0 이하가 된경우 패배
+                    if (player.Hp <= 0)
+                    {
+                        Lose();
+                    }
                     // 몬스터가 모두 죽은경우 승리
                     foreach (var monster in monsterlist)
                     {
