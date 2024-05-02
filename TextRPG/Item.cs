@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -125,7 +125,7 @@ public class Item
 }
 
 
-internal class Potion
+public class Potion
 {
     public string Name;
     public string Desc;

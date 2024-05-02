@@ -1,4 +1,6 @@
-﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -120,8 +122,10 @@ namespace TextRPG
             Console.WriteLine("4. 퀘스트");
             Console.WriteLine("5. 회복 아이템");
             Console.WriteLine("6. 아이템 상점");
+            Console.WriteLine("7. 저장하기");
+            Console.WriteLine("8. 불러오기");
             Console.WriteLine("");
-            int choice = ConsoleUtil.MenuChoice(1, 6, "원하시는 행동을 입력해주세요.");
+            int choice = ConsoleUtil.MenuChoice(1, 8, "원하시는 행동을 입력해주세요.");
 
             switch (choice)
             {
@@ -142,6 +146,13 @@ namespace TextRPG
                     break;
                 case 6:
                     StoreMenu();
+                    break;
+                case 7:
+                    GameUtil gameUtil = new GameUtil(player, monsterlist, isMonsterSpawned, startHp, inventory, storeInventory, QuestList, bonusAtk, bonusDef, bonusHp, potionList, currentStage);
+                    gameUtil.Save(gameUtil);
+                    break;
+                case 8:
+                    Load();
                     break;
             }
             MainMenu();
@@ -1091,6 +1102,59 @@ namespace TextRPG
             potionList[0].Count += dropPotion;
             for(int i=0; i<dropSword; i++) inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
         }
+
+
+        public void Load()
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gameSave.json"); // 파일 경로 생성
+
+            // JSON 파일 전체를 읽어옴
+            string json = File.ReadAllText(filePath);
+
+            // JSON 문자열을 JObject로 파싱
+            JObject data = JObject.Parse(json);
+
+            // Player 객체 추출
+            player = data["Player"].ToObject<Player>();
+
+            // Monsterlist 객체 추출
+            monsterlist = data["Monsterlist"].ToObject<List<Monster>>();
+
+            // IsMonsterSpawned 추출
+            isMonsterSpawned = data["IsMonsterSpawned"].ToObject<bool>();
+
+            // StartHp 추출
+            startHp = data["StartHp"].ToObject<int>();
+
+            // Inventory 객체 추출
+            inventory = data["Inventory"].ToObject<List<Item>>();
+
+            // StoreInventory 객체 추출
+            storeInventory = data["StoreInventory"].ToObject<List<Item>>();
+
+            // QuestList 객체 추출
+            QuestList = data["QuestList"].ToObject<List<Quest>>();
+
+            // BonusAtk 추출
+            bonusAtk = data["BonusAtk"].ToObject<int>();
+
+            // BonusDef 추출
+            bonusDef = data["BonusDef"].ToObject<int>();
+
+            // BonusHp 추출
+            bonusHp = data["BonusHp"].ToObject<int>();
+
+            // PotionList 객체 추출
+            potionList = data["PotionList"].ToObject<List<Potion>>();
+
+            // CurrentStage 객체 추출
+            currentStage = data["CurrentStage"].ToObject<Stage>();
+
+            Console.WriteLine();
+            Console.WriteLine("게임을 불러오는 중입니다......");
+            Thread.Sleep(1500);
+        }
+
     }
 
 
