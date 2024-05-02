@@ -48,16 +48,4 @@ public class GameUtil
         Thread.Sleep(1500);
     }
 
-    public static void Load(GameManager gameManager)
-    {
-        string directoryPath = @"C:\SpartaCodingProjects\TextRPG"; // 저장할 디렉토리 경로
-        string filePath = Path.Combine(directoryPath, "gameSave.json"); // 파일 경로 생성
-
-        // JSON
-        string json = File.ReadAllText(filePath);
-        // JSON
-        Player player = JsonConvert.DeserializeObject<Player>(json);
-    }
-
-
 }

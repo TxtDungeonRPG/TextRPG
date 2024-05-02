@@ -983,6 +983,7 @@ namespace TextRPG
             Console.WriteLine("■ Quest ■\n");
             foreach(Quest exquest in QuestList)
             {
+
                 if (!exquest.QuestOut)
                 {
                     count++;
@@ -1179,7 +1180,9 @@ namespace TextRPG
             storeInventory = data["StoreInventory"].ToObject<List<Item>>();
 
             // QuestList 객체 추출
-            QuestList = data["QuestList"].ToObject<List<Quest>>();
+            QuestList[0] = data["QuestList"][0].ToObject<Quest1>();
+            QuestList[1] = data["QuestList"][1].ToObject<Quest2>();
+            QuestList[2] = data["QuestList"][2].ToObject<Quest3>();
 
             // BonusAtk 추출
             bonusAtk = data["BonusAtk"].ToObject<int>();
