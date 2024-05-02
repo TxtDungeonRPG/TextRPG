@@ -409,7 +409,7 @@ namespace TextRPG
                 //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
                 Random random = new Random();
                 int stageLevel = (int)(currentStage.CurrentFloor * 0.5); // 스테이지 레벨에 따른 난이도
-                int count = random.Next(1 + stageLevel, 4 + stageLevel); // 몬스터 마리수
+                int count = random.Next(1 + stageLevel, 5 + stageLevel); // 몬스터 마리수
                 int cnt; // 몬스터 종류
                 for (int i = 0; i < count; i++)
                 {
