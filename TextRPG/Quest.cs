@@ -52,7 +52,7 @@ namespace TextRPG
         {
             QuestTitle = "마을을 위협하는 미니언 처치";
             QuestScript = "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n모험가인 자네가 좀 처치해주게!";
-            QuestWhatToDo = "몬스터 5마리 처치";
+            QuestWhatToDo = "미니언 5마리 처치";
             Reward = "쓸만한 방패 x 1\n5G";
             QuestTarget = 5;
             QuestTracker = 0;

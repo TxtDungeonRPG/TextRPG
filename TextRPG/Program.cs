@@ -555,7 +555,8 @@ namespace TextRPG
                     monsterlist[choiceEnemy - 1].Hp = 0;
                     //player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
 
-                    QuestList[0].Changenum(1);
+                    if (monsterlist[choiceEnemy - 1].Name == "미니언")
+                        QuestList[0].Changenum(1);
 
 
                 }
@@ -736,7 +737,8 @@ namespace TextRPG
                     // 경험치
                     //player.Exp += (int)selectedMonster.Level;
                     // 퀘스트
-                    QuestList[0].Changenum(1);
+                    if (monsterlist[monsterIndex - 1].Name == "미니언")
+                        QuestList[0].Changenum(1);
                 }
                 else
                 {
@@ -785,7 +787,8 @@ namespace TextRPG
                         // 경험치
                         //player.Exp += (int)monsterlist[index].Level;
                         // 퀘스트
-                        QuestList[0].Changenum(1);
+                        if (monsterlist[index].Name == "미니언")
+                            QuestList[0].Changenum(1); 
 
                     }
                     else
@@ -951,7 +954,7 @@ namespace TextRPG
             Console.WriteLine("Lv{0} {1}", player.Level, player.Name);
             Console.WriteLine("HP {0} -> 0", startHp);
             Console.WriteLine("");
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("0. 게임종료");
             Console.WriteLine("");
             int choice = ConsoleUtil.MenuChoice(0, 0);
 
@@ -960,7 +963,7 @@ namespace TextRPG
                 case 0:
                     monsterlist.Clear();
                     isMonsterSpawned = false;
-                    MainMenu();
+                    Environment.Exit(0);
                     break;
             }
             Lose();
