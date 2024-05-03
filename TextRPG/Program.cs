@@ -17,6 +17,8 @@ namespace TextRPG
         private List<Monster> monsterlist;
         private bool isMonsterSpawned = false;
         private int startHp;
+        private int startMp;
+        private int startExp;
         private List<Item> inventory;
         private List<Item> storeInventory;
         private List<Quest> QuestList;
@@ -415,8 +417,10 @@ namespace TextRPG
         {
             if (!isMonsterSpawned)
             {
-                //전투 시작당시의 체력. Victory(), Lose()에서 사용하기 위한 값.
-                startHp = player.Hp; 
+                //전투 시작당시의 체력,마나,경험치. Victory(), Lose()에서 사용하기 위한 값.
+                startHp = player.Hp;
+                startMp = player.Mp;
+                startExp = player.Exp;
                 //몬스터 1~4마리 랜덤 생성. 종류 중복 가능
                 Random random = new Random();
                 int stageLevel = (int)(currentStage.CurrentFloor * 0.5); // 스테이지 레벨에 따른 난이도
@@ -858,7 +862,6 @@ namespace TextRPG
                 Console.Clear();
 
                 Console.WriteLine("■ Battle!! ■");
-                Console.WriteLine(monsterDamage);
                 Console.WriteLine("");
 
                 Console.WriteLine($"Lv.{monster.Level} {monster.Name} 의 공격!");
@@ -901,6 +904,12 @@ namespace TextRPG
 
         private void Victory()
         {
+            // 경험치 확인
+            foreach (var monster in monsterlist)
+            {
+                player.Exp += (int)monster.Level;
+            }
+
             Console.Clear();
 
             Console.WriteLine("■ Battle!! - Result ■");
@@ -909,21 +918,23 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("던전에서 몬스터 {0}마리를 잡았습니다.", monsterlist.Count);
             Console.WriteLine("");
-            Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
-            Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
-            Console.WriteLine("");
-            foreach(var monster in monsterlist)
-            {
-                player.Exp += (int)monster.Level;
-            }
+            Console.WriteLine("[캐릭터 정보]");
             //레벨업 확인
-            if (player.LevelUpcheck()) 
+            if (player.LevelUpcheck())
             {
-                Console.SetCursorPosition(0, 6);
                 Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level - 1, player.Name, player.Level);
-                Console.SetCursorPosition(0, 11);
+                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
+                Console.WriteLine("MP {0} -> {1}", startMp, player.Mp);
             }
-
+            else
+            {
+                Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
+                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
+                Console.WriteLine("MP {0} -> {1}", startMp, player.Mp);
+                Console.WriteLine("Exp {0} -> {1}", startExp, player.Exp);
+            }
+            Console.WriteLine("");
+           
             //획득 아이템
             DropItem();
             Console.WriteLine("0. 다음");
@@ -951,8 +962,10 @@ namespace TextRPG
             Console.WriteLine("");
             Console.WriteLine("You Lose");
             Console.WriteLine("");
+            Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine("Lv{0} {1}", player.Level, player.Name);
             Console.WriteLine("HP {0} -> 0", startHp);
+            Console.WriteLine("MP {0} -> {1}", startMp, player.Mp);
             Console.WriteLine("");
             Console.WriteLine("0. 게임종료");
             Console.WriteLine("");
@@ -1039,10 +1052,6 @@ namespace TextRPG
             {
                 Console.WriteLine("1. 보상 받기");
             }
-            else if (!QuestList[questChoice - 1].IsAccept)
-            {
-                Console.WriteLine("1. 수락");
-            }
             
 
             int choice = ConsoleUtil.MenuChoice(0, 1, "0. 돌아가기\n원하시는 행동을 입력해주세요.");//숫자 수정하기
@@ -1053,12 +1062,6 @@ namespace TextRPG
                     if (QuestList[questChoice - 1].IsDone)//보상 획득
                     {
                         QuestList[questChoice - 1].QuestDone(inventory,player);
-                    }
-                    else
-                    {
-                        Console.WriteLine("퀘스트를 수락했습니다\n엔터를 눌러 계속...");
-                        QuestList[questChoice - 1].IsAccept = true;
-                        Console.ReadLine();
                     }
                         break;
                 case 0:
