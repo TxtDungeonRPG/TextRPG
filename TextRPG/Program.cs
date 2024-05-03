@@ -40,10 +40,7 @@ namespace TextRPG
             monsterlist = new List<Monster>();
             PlayerCreate();//캐릭터생성
             inventory = new List<Item>();
-            //장착기능 잘 되는지 확인하기 위해 임시로 넣어둔 아이템입니다. 나중에 지우셔도 무방합니다! - 김신우
-             //inventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
-            //inventory.Add(new Item("낡은 검", "낡은 검", ItemType.WEAPON, 2, 0, 0, 1000));
-            //inventory.Add(new Item("골든 헬름", "희귀한 투구", ItemType.ARMOR, 0, 9, 0, 2000));
+
             //상점 아이템 목록
             storeInventory = new List<Item>();
             storeInventory.Add(new Item("무쇠갑옷", "튼튼한 갑옷", ItemType.ARMOR, 0, 5, 0, 500));
@@ -77,7 +74,6 @@ namespace TextRPG
             Console.WriteLine("1. 전사\n2. 마법사\n3. 도적\n4. 해적");
 
             Skill[] skills;
-            //skills = [new Skill("알파 스트라이크", 10, 2, 1), new Skill("더블 스트라이크", 15, 1.5f, 2)];
 
             int choice = ConsoleUtil.MenuChoice(0, 4, "원하시는 직업을 입력해주세요.");
 
@@ -321,10 +317,7 @@ namespace TextRPG
 
             // TODO : 능력치 강화분을 표현하도록 변경
             IncreaseItemStat();
-            //int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
-            //int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
-            //int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
-
+ 
             Console.Write("공격력 : " + (player.AtkPlayer + bonusAtk).ToString());
             if (bonusAtk > 0) Console.WriteLine($" (+{bonusAtk})"); else Console.WriteLine("");
             Console.Write("방어력 : " + (player.DfdPlayer + bonusDef).ToString());
@@ -557,7 +550,6 @@ namespace TextRPG
                     }
                     monsterlist[choiceEnemy - 1].IsDead = true;
                     monsterlist[choiceEnemy - 1].Hp = 0;
-                    //player.Exp += (int)monsterlist[choiceEnemy - 1].Level;
 
                     if (monsterlist[choiceEnemy - 1].Name == "미니언")
                         QuestList[0].Changenum(1);
@@ -738,8 +730,7 @@ namespace TextRPG
                     }
                     selectedMonster.IsDead = true;
                     selectedMonster.Hp = 0;
-                    // 경험치
-                    //player.Exp += (int)selectedMonster.Level;
+
                     // 퀘스트
                     if (monsterlist[monsterIndex - 1].Name == "미니언")
                         QuestList[0].Changenum(1);
@@ -759,8 +750,6 @@ namespace TextRPG
                 // 랜덤으로 공격할 몬스터의 정한다. 
                 List<int> selectedIndexList = GetRandomMonsterIdx(monsterlist, useSkill.DamageAmount);
 
-
-        
                 // 랜덤으로 몬스터를 맞추고 표시
                 foreach (int index in selectedIndexList) 
                 {
@@ -788,8 +777,7 @@ namespace TextRPG
 
                         monsterlist[index].IsDead = true;
                         monsterlist[index].Hp = 0;
-                        // 경험치
-                        //player.Exp += (int)monsterlist[index].Level;
+
                         // 퀘스트
                         if (monsterlist[index].Name == "미니언")
                             QuestList[0].Changenum(1); 
@@ -801,7 +789,6 @@ namespace TextRPG
                         monsterlist[index].Hp -= skillDamage;
                     }
                 }
-               
             }
             Console.WriteLine("");
             Console.WriteLine("0. 다음");
@@ -923,13 +910,13 @@ namespace TextRPG
             if (player.LevelUpcheck())
             {
                 Console.WriteLine("Lv.{0} {1} -> Lv.{2} {1}", player.Level - 1, player.Name, player.Level);
-                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
+                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); 
                 Console.WriteLine("MP {0} -> {1}", startMp, player.Mp);
             }
             else
             {
                 Console.WriteLine("Lv.{0} {1}", player.Level, player.Name);
-                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); //전투시작 당시 체력값 받아와야함!
+                Console.WriteLine("HP {0} -> {1}", startHp, player.Hp); 
                 Console.WriteLine("MP {0} -> {1}", startMp, player.Mp);
                 Console.WriteLine("Exp {0} -> {1}", startExp, player.Exp);
             }
@@ -994,7 +981,6 @@ namespace TextRPG
                 }
             }
 
-
             Console.Clear();
             Console.WriteLine("■ Quest ■\n");
             foreach(Quest exquest in QuestList)
@@ -1053,7 +1039,6 @@ namespace TextRPG
                 Console.WriteLine("1. 보상 받기");
             }
             
-
             int choice = ConsoleUtil.MenuChoice(0, 1, "0. 돌아가기\n원하시는 행동을 입력해주세요.");//숫자 수정하기
 
             switch (choice)
@@ -1100,7 +1085,6 @@ namespace TextRPG
                 }
 
             }
-
             return randomIndexList;
         }
 
@@ -1211,9 +1195,6 @@ namespace TextRPG
         }
 
     }
-
-
-
 
 
     class Program

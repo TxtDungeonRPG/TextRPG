@@ -20,9 +20,7 @@ public class Item
     public int Atk { get; }
     public int Def { get; }
     public int Hp { get; }
-
     public int Price { get; }
-
     public bool IsEquipped { get; private set; }
     public bool IsPurchased { get; private set; }
 
@@ -48,22 +46,15 @@ public class Item
         Console.Write("- ");
         if (withNumber)
         {
-            //Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{idx} ");
-            //Console.ResetColor();
         }
         if (IsEquipped)
         {
-            //Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("[");
             Console.Write("E");
             Console.Write("]");
-            //Console.Write(ConsoleUtil.PadRightForMixedText(Name, 9));
         }
-        //else Console.Write(ConsoleUtil.PadRightForMixedText(Name, 12));
         Console.Write(Name);
-
-
         Console.Write(" | ");
 
         if (Atk != 0) Console.Write($"공격력 {(Atk >= 0 ? "+" : "")}{Atk} ");
@@ -71,7 +62,6 @@ public class Item
         if (Hp != 0) Console.Write($"체  력 {(Hp >= 0 ? "+" : "")}{Hp} ");
 
         Console.Write(" | ");
-
         Console.WriteLine(Desc);
         Console.ResetColor();
     }
@@ -84,11 +74,8 @@ public class Item
         // 장착관리 전용
         if (withNumber)
         {
-            //Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write("{0} ", idx);
-            //Console.ResetColor();
         }
-        else //Console.Write(ConsoleUtil.PadRightForMixedText(Name, 12));
         Console.Write(Name);
         Console.Write(" | ");
 
@@ -97,10 +84,7 @@ public class Item
         if (Hp != 0) Console.Write($"체  력 {(Hp >= 0 ? "+" : "")}{Hp}");
 
         Console.Write(" | ");
-
-        //Console.Write(ConsoleUtil.PadRightForMixedText(Desc, 12));
         Console.Write(Desc);
-
         Console.Write(" | ");
 
         if (IsPurchased)
@@ -109,7 +93,6 @@ public class Item
         }
         else
         {
-            //ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
             Console.WriteLine(""+Price.ToString()+" G");
         }
         Console.ResetColor ();

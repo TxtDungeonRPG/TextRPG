@@ -15,8 +15,6 @@ public class MainClass
     // Main 메서드 밖에서 currentStage 변수를 선언
     private static Stage currentStage;
 
-  
-
     // MainMenu 메서드 정의
     private static void MainMenu()
     {
