@@ -1035,15 +1035,14 @@ namespace TextRPG
             if (QuestList[questChoice-1].IsDone) 
             {
                 Console.WriteLine("1. 보상 받기");
-                Console.WriteLine("2. 돌아가기");
             }
-            else
+            else if (!QuestList[questChoice - 1].IsAccept)
             {
                 Console.WriteLine("1. 수락");
-                Console.WriteLine("2. 거절");
             }
+            
 
-            int choice = ConsoleUtil.MenuChoice(1, 2, "\n원하시는 행동을 입력해주세요.");//숫자 수정하기
+            int choice = ConsoleUtil.MenuChoice(0, 1, "0. 돌아가기\n원하시는 행동을 입력해주세요.");//숫자 수정하기
 
             switch (choice)
             {
@@ -1055,10 +1054,11 @@ namespace TextRPG
                     else
                     {
                         Console.WriteLine("퀘스트를 수락했습니다\n엔터를 눌러 계속...");
+                        QuestList[questChoice - 1].IsAccept = true;
                         Console.ReadLine();
                     }
                         break;
-                case 2:
+                case 0:
                     StartQuestMenu();
                     break;
             }

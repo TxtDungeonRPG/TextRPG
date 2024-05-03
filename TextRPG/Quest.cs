@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace TextRPG
 {
@@ -13,6 +13,7 @@ namespace TextRPG
         public int QuestTracker;//현재 달성도
         public bool IsDone = false;
         public bool QuestOut =false;
+        public bool IsAccept = false;
 
         public int num;
         //interface
