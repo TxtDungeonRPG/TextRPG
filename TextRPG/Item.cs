@@ -44,23 +44,23 @@ public class Item
     // 2. 장착관리에서 내가 어떤 아이템을 낄지 말지 결정할 때
     internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
     {
+        if(IsEquipped) Console.ForegroundColor = ConsoleColor.DarkGreen;
         Console.Write("- ");
         if (withNumber)
         {
             //Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{idx} ");
-            Console.ResetColor();
+            //Console.ResetColor();
         }
         if (IsEquipped)
         {
+            //Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("[");
-            //Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("E");
-            Console.ResetColor();
             Console.Write("]");
-            //Console.Write(ConsoleUtility.PadRightForMixedText(Name, 9));
+            //Console.Write(ConsoleUtil.PadRightForMixedText(Name, 9));
         }
-        //else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 12));
+        //else Console.Write(ConsoleUtil.PadRightForMixedText(Name, 12));
         Console.Write(Name);
 
 
@@ -73,12 +73,13 @@ public class Item
         Console.Write(" | ");
 
         Console.WriteLine(Desc);
-
+        Console.ResetColor();
     }
 
 
     public void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
     {
+        if (IsPurchased) Console.ForegroundColor = ConsoleColor.DarkGray; 
         Console.Write("- ");
         // 장착관리 전용
         if (withNumber)
@@ -87,7 +88,7 @@ public class Item
             Console.Write("{0} ", idx);
             //Console.ResetColor();
         }
-        //else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 12));
+        else //Console.Write(ConsoleUtil.PadRightForMixedText(Name, 12));
         Console.Write(Name);
         Console.Write(" | ");
 
@@ -97,7 +98,7 @@ public class Item
 
         Console.Write(" | ");
 
-        //Console.Write(ConsoleUtility.PadRightForMixedText(Desc, 12));
+        //Console.Write(ConsoleUtil.PadRightForMixedText(Desc, 12));
         Console.Write(Desc);
 
         Console.Write(" | ");
@@ -111,6 +112,7 @@ public class Item
             //ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
             Console.WriteLine(""+Price.ToString()+" G");
         }
+        Console.ResetColor ();
     }
 
     internal void ToggleEquipStatus()
